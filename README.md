@@ -1,63 +1,46 @@
 # Optata
 
-Verificeret efterspørgsel på boligmarkedet: købere registrerer, hvad de vil købe, og ejere kan logge ind og se interessen for deres område, gade og hus.
+**Verificeret efterspørgsel og markedsinfrastruktur til boligmarkedet.**
 
-## Indhold
+Optata udvikles som en platform, der forbinder ejendomsregisterdata, verificeret købsintention, sælgermandater, strukturerede bud og afgrænset partnerudførelse. Platformens langsigtede differentiering er at eje proces- og efterspørgselslaget — ikke blot vise boliger.
 
-| Sti | Indhold |
+## Dokumentation — start her
+
+| Dokument | Autoritet |
 |---|---|
-| `docs/Optata - Projektgrundlag v5.1.md` | Masterdokumentet: forretning, koncept, data, mekanismer, sikkerhed, jura og leveranceplan |
-| `docs/historik/Optata - Projektgrundlag v5.0.md` | Forrige version |
-| `docs/bilag/` | De elleve tekniske bilag (06–16), uændrede, med en oversigt over hvad v5.1 har ændret |
-| `docs/design/` | Designleverancer: brandidé, visuel identitet, tekstdeck, mærke, mails, PDF, skærme, udbudsmatch (M3), markedsambitionen (SaleMandate + OfferLedger) og målrettet rækkevidde (Campaign) |
-| `docs/architecture/ARCHITECTURE.md` | Arkitekturen v2.0: formål, zoner, 14 moduler, de 20 invarianter og markedets to veje |
-| `docs/architecture/M3-opdatering.md` | M3-events, sprint-renummerering og nye guard-tests |
-| `docs/backlog/S3.md`, `S4.md`, `S5.md` og `S6.md` | Sprintbacklogs for S3–S6 (S0 og S1 ligger i `docs/backlog/S0-S1.md`) |
-| `docs/security/guards-s3.md` | Guard-tests til S3 som specifikation (udkast, afventer DK-review) |
-| `docs/compliance/legal-questions-week6.md` | Spørgsmål, juristen skal besvare skriftligt (L1–L37) |
-| `docs/compliance/legal-questions-mandate-and-campaigns.md` | Jurist-bilag: mandat, budbog og kampagner (L38–L48) med svarskabelon |
-| `docs/compliance/pilot-feed-aftale.md` | Pilot-aftale: mægler-feed mod gratis adgang (M3) |
-| `docs/adr/` | ADR-016–018: udbudskilder, M3 uden salgspakke, scope-hierarki |
-| `contracts/feeds/agent-feed.v1.json` | Feed-kontrakt for mæglerens udbudsfeed (JSON Schema) |
-| `docs/backlog/docs-struktur.md` | Foreslået samlet `docs/`-struktur og commit-plan |
+| [Projektgrundlag v5.2](docs/Optata%20-%20Projektgrundlag%20v5.2.md) | **Autoritativ produkt- og beslutningsbaseline** |
+| [Arkitektur v2.1](docs/architecture/ARCHITECTURE.md) | Teknisk målarkitektur og invarianter |
+| [ADR-017-SC](docs/adr/ADR-017-structure-c-supersession.md) | Struktur C og afløst M3-model |
+| [S0–S1 backlog](docs/backlog/S0-S1.md) | Fundament og register/API |
+| [S3 backlog](docs/backlog/S3.md) | MitID, ordre og verifikation |
+| [S4 backlog](docs/backlog/S4.md) | SaleMandate |
+| [S5 backlog](docs/backlog/S5.md) | OfferLedger |
+| [S6 backlog](docs/backlog/S6.md) | Listings, Campaign og scoped deltagelse |
+| [Campaign – fuld design-spec](docs/design/Optata%20-%20Campaign-modul%20-%20fuld%20spec%20v1.md) | Supplerende detaljespecifikation; underordnet v5.2/arkitektur |
+| [Juridiske spørgsmål L1–L37](docs/compliance/legal-questions-week6.md) | Åbne juridiske spørgsmål |
+| [Juridiske spørgsmål L38–L48](docs/compliance/legal-questions-mandate-and-campaigns.md) | Mandat, budbog og Campaign |
+| [CI-gates](docs/ci-gates.md) | Kontroller og implementeringsstatus |
 
-Ændringerne fra v5.0 til v5.1 står i §0.2 i masterdokumentet. De åbne beslutninger står i §0.3.
+## Dokumentationsregler
 
-## Mangler i repoet
+1. v5.2 er produktbaseline; ARCHITECTURE.md er teknisk baseline.
+2. Gamle designoplæg, bilag og sprinttekster er historik, medmindre de er udtrykkeligt refereret af gældende baseline.
+3. En juridisk problemstilling er ikke godkendt, blot fordi den er beskrevet. Se release gates i v5.2 §10.
+4. Opdater kontrakter, ADR, backlog og tests sammen, når en beslutning ændres.
+5. Dokumentationsændringer sker på branch og via PR. Ingen direkte ændringer på main.
 
-Disse filer er nævnt i masterdokumentets bilag B, men er endnu ikke lagt ind:
+## Implementeringsstatus
 
-- Optata - Forretningsplan v4.2.md
-- Optata - Arkitekturreview v4.2.md
-- Optata - Finansiel Model 36 Mdr.xlsx
+S0 og S1 er delvist/indledningsvist implementeret. Bitemporal registermodel, testadapter, density og zone A API findes i første version. MitID, attest/vault, SaleMandate, OfferLedger, Campaign, produktionsfeed, frontend og fulfillment er ikke færdigimplementeret. Se v5.2 §9 og S0–S1 backlog.
 
-## Kode
+## Kode og lokal udvikling
 
-S0 (fundamentet) er påbegyndt. Status og næste skridt står i `docs/backlog/S0-S1.md`.
+Python 3.12 og Docker:
 
-```
-apps/api/        HTTP-transport, ingen forretningsregler
-core/            domænet: ét modul pr. ansvar, events deles via core/events
-workers/         baggrundsjobs
-contracts/       OpenAPI og event-skemaer, skrives før koden
-migrations/      zoner, roller, RLS og append-only tabeller
-tools/           migrationer og syntetisk datagenerator
-tests/guards/    de regler, der aldrig må brydes
-```
-
-Kom i gang (kræver Python 3.12 og Docker):
-
-```
+```bash
 pip install -e ".[dev]"
-make dev      # lokal database med syntetiske data
-make ci       # lint, modulgrænser og alle tests
+make dev
+make ci
 ```
 
-## Regler for koden
-
-Reglerne står i masterdokumentets §7:
-
-- Udvikling sker kun på syntetiske data. Ingen persondata i repoet.
-- Guards, RLS, vault, reveal, finansiel logik og sletning skrives og godkendes af et menneske. Det, der ligger i `migrations/` og `tests/guards/` nu, er udkast og er markeret sådan.
-- En rød guard-test blokerer merge. Det kræver, at branch protection er slået til på `main`.
-- Kode, kommentarer og commits er på engelsk. Forretningsdokumenter og brugervendt tekst er på dansk.
+Koden skal anvende syntetiske data, indtil de relevante juridiske, licensmæssige og sikkerhedsmæssige gates er lukket. Guards, RLS, vault, identitet, mandat, bud, samtykke og finansiel logik kræver dokumenteret menneskelig review.
