@@ -48,7 +48,8 @@ k≥5 er ikke alene tilstrækkeligt til anonymisering. Zone C-publicering kræve
 
 | Modul | Ansvar | Må ikke eje |
 |---|---|---|
-| registry | registerkilder, bitemporal ejendomsmodel | køber-/sælgeridentitet |
+| registry | registerkilder, bitemporal ejendomsmodel og autoritative ejendoms-/adresseidentiteter | køber-/sælgeridentitet |
+| area_intelligence | geografiske enheder/geometrier, facility registry, områdeprofiler, statistikprojektioner og kildebaseret opdateringsworkflow | ejendomsregisterets autoritative identiteter, person-/transaktionsdata eller ubekræftede AI-claims |
 | reports | rapporter og områdeprofiler | rå zone B |
 | agent | claims/medieanalyse med provenance | automatisk publicering uden review |
 | orderbook | købsintention, status, scope, matching | identitetsvault |
@@ -81,6 +82,38 @@ k≥5 er ikke alene tilstrækkeligt til anonymisering. Zone C-publicering kræve
 - `source_ref` + `license_ref`: proveniens og brugsret for eksterne data.
 
 Alle relationer mellem personidentitet og ejendom/ordre skal være formålsbundne, RLS-beskyttede og auditerede.
+
+### 5.1 Geografisk model og Area Intelligence
+
+Area Intelligence og Property Discovery er to produktområder på en fælles geografisk rygrad. Geografisk navigation er region → kommune → område → by → bydel → kvarter → gade → hus/adresse. Niveauerne er ikke et universelt, strengt hierarki: officielle enheder og Optata-definerede områder kan overlappe. Hver geografisk enhed skal derfor have type, identifikator/namespace, geometri, gyldighed, kilde og versionshistorik. Relationer mellem geografi skal kunne være mange-til-mange og tidsafhængige, hvor kilderne kræver det.
+
+Officielle geografiske enheder (fx region, kommune, byområde, sogn og postnummer) skal have adskilt identitet fra Optata-definerede områder, bydele og kvarterer. DAR-adresse, BFE og matrikelidentitet er forskellige nøgler med eksplicitte relationer; BFE→adresse kan være 1:mange.
+
+Area Intelligence ejer/koordinerer:
+- Area Registry og versionerede geometrier.
+- Facility Taxonomy og Facility Registry med kategorier og stedidentitet.
+- Kilde-/licensregister og evidens for hvert facility-claim.
+- Områdeaggregationer, som beregnes ud fra godkendte faciliteter og gyldige geografiske grænser.
+- Statistiske indikatorer med geografisk opløsning, periode, definition, enhed, kilde og disclosure-status.
+
+De 30 primære facilitets- og servicetyper er et produktmål. Den endelige taksonomi og kategorispecifikke datakilder skal fastlægges før API-/DB-kontrakter. Et facility record skal kunne skelne mellem stedets identitet, kategori, adresse/geometri, driftsstatus, evidens, observationstid, kontrolstatus og historik. Optællinger skal kunne reproduceres fra godkendte poster og en bestemt version af områdets geometri.
+
+### 5.2 AI-baseret facility discovery og kontrol
+
+AI må foreslå kandidater og ændringer, men må ikke selv gøre en ubekræftet påstand til et verificeret faktum. Den tiltænkte workflow har tre logiske roller:
+1. **Discovery:** finder kandidater og dokumentation fra tilladte kilder.
+2. **Verification:** kontrollerer uafhængigt identitet, kategori, adresse/geometri og aktiv status.
+3. **Audit:** udfører separat evidens- og konsistenskontrol, herunder konflikter, dubletter og grundlaget for optælling.
+
+Uafhængighed betyder, at verification/audit selv undersøger kilder/evidens; de må ikke blot godkende discovery-agentens tekst eller konklusion. Roller kan senere implementeres med separate agentinstanser eller andre kontroller, men teknisk adskillelse og uafhængig evidens er påkrævet.
+
+Mindst disse tilstande skal kunne repræsenteres: verified, pending, disputed og inactive. Kun verified og gyldige poster må tælles som aktive faciliteter. Pending/disputed poster holdes ude af offentlige totaler; inactive bevares i historikken. Manglende bekræftelse er ikke bevis for lukning. Ændringer skal have evidens, actor/agentrolle, tidspunkt, kilde og auditspor. Tvivlstilfælde eskaleres til menneskelig behandling efter fastlagte tærskler.
+
+### 5.3 Statistik og geografisk opløsning
+
+Statistikdata skal lagres/vises med kilde, tabel/indikator, definition, periode, enhed, geografisk identifikator og geografitype, udtrækstid, eventuel diskretionering samt licens/disclosurevilkår. Statistik må kun knyttes til en geografi, som kildens faktiske granularitet understøtter. Ingen automatisk fordeling af kommune-/sognetal til mindre områder må fremstilles som officiel statistik. Eventuelle modellerede estimater skal være tydeligt adskilt, mærket og metode-/usikkerhedsbeskrevet. Små populationer og følsomme udtræk skal følge statistikkildens disclosure-regler.
+
+Area Intelligence er en del af Zone A for offentlige/licenserede geografiske data, faciliteter og statistik, medmindre en konkret datakategori efter klassifikation kræver anden zone. Zone C-publicering af aggregerede produkter kræver fortsat særskilt disclosure- og re-identifikationsvurdering.
 
 ## 6. Ufravigelige invarianter
 
@@ -187,6 +220,7 @@ Begge veje er målarkitektur. DIRECT er ikke én samlet leverance fra én juridi
 |---|---|
 | S0 skelet, modulgrænser, syntetiske data, CI-baseline | Delvist implementeret; se S0-S1 backlog |
 | S1 bitemporal register, testadapter, density, zone A API | Første version implementeret; rigtige adaptere/geometri/UI mangler |
+| Area Intelligence | Produktretning og målarkitektur dokumenteret; facility taxonomy, data providers, statistikadaptere og produktionsworkflow ikke implementeret |
 | S2 analyse/agent | Ikke dokumenteret som færdig |
 | MitID/ordre/attest/vault | Ikke implementeret |
 | SaleMandate | Designmål, ikke implementeret |

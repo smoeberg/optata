@@ -16,6 +16,20 @@
 - Product Closure and Development Readiness v1.0: audit/recommendations, not an approved product baseline.
 - Synthetic data remains the default. Real personal data and production transaction flows remain gated by the relevant legal, privacy, security and human-review requirements.
 
+## Approved product direction — Area Intelligence
+
+The product owner has confirmed Area Intelligence as a distinct product capability connected to Property Discovery through one shared geographic foundation.
+
+- Navigation: region → municipality → area → city → district → neighbourhood → street → house/address. This is a product navigation, not a strict administrative containment tree; official geographies and Optata-defined areas may overlap.
+- Official geographies (e.g. region, municipality, urban area, parish and postcode) remain distinct from Optata-defined areas, districts and neighbourhoods.
+- Each area can have a profile with 30 primary facility/service categories, concrete mapped places and counts. The exact taxonomy remains to be finalized.
+- AI discovery is assisted by independent verification and audit roles. Unverified or disputed claims must not enter public counts.
+- Income and demographic indicators must retain their source, definition, period and actual geographic resolution. No false downscaling to smaller areas.
+- Area Intelligence and Property Discovery share geography but remain distinct product capabilities.
+- The product direction is documented in [Area Intelligence v1.0](../product/AREA-INTELLIGENCE.md), with baseline/architecture references updated in the same documentation PR.
+
+This is an approved product direction, not a claim that the feature is implemented. Provider selection, source licensing, exact facility taxonomy, API/database contracts and production automation remain open.
+
 ## Repository and current activity
 
 - Default branch: `main`.
@@ -55,3 +69,4 @@ A green CI run only proves the checks that actually ran. It does not close missi
 |---|---|
 | 2026-11-17 | Initial coordination snapshot based on main commit `7a8f52a`; PR #17 recorded as open draft. |
 | 2026-11-17 | Updated after merges of PRs #17, #18 and #19. Coordination foundation is now on `main`; no open PRs were reported at verification. |
+| 2026-11-17 | Area Intelligence product direction documented on branch `docs/area-intelligence-product-direction` under Issue #21; pending human review/merge. |
