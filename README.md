@@ -8,6 +8,7 @@ Verificeret efterspørgsel på boligmarkedet: købere registrerer, hvad de vil k
 |---|---|
 | `docs/Optata - Projektgrundlag v5.1.md` | Masterdokumentet: forretning, koncept, data, mekanismer, sikkerhed, jura og leveranceplan |
 | `docs/historik/Optata - Projektgrundlag v5.0.md` | Forrige version |
+| `docs/bilag/` | De elleve tekniske bilag (06–16), uændrede, med en oversigt over hvad v5.1 har ændret |
 
 Ændringerne fra v5.0 til v5.1 står i §0.2 i masterdokumentet. De åbne beslutninger står i §0.3.
 
@@ -18,7 +19,6 @@ Disse filer er nævnt i masterdokumentets bilag B, men er endnu ikke lagt ind:
 - Optata - Forretningsplan v4.2.md
 - Optata - Arkitekturreview v4.2.md
 - Optata - Finansiel Model 36 Mdr.xlsx
-- De elleve tekniske bilag (`attachments/altf73/*.txt`)
 
 ## Regler for koden
 
