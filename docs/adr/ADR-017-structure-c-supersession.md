@@ -1,6 +1,6 @@
 # ADR-017-SC — Struktur C: SaleMandate, OfferLedger og scoped udførere
 
-**Status:** Proposed baseline — stiftergodkendelse og juridisk afklaring kræves  
+**Status:** Accepted as product direction · Legal release gates open  
 **Dato:** 17. november 2026  
 **Erstatter/afklarer:** Den tidligere ADR-017 om M3 uden salgspakke skal læses som historisk beslutning om det daværende M3-flow. Denne ADR fastlægger den nye produktretning; den gør ikke M3-flowet gældende igen.
 
