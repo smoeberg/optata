@@ -1,6 +1,6 @@
 # Optata — Arkitektur
 
-**Version:** 1.1 · **Status:** Gældende · **Ejer:** DK-reviewer
+**Version:** 2.0 · **Status:** Gældende · **Ejer:** DK-reviewer
 **Læses før al kode.** Afvigelse kræver ADR + DK-godkendelse.
 
 ---
@@ -19,7 +19,11 @@ Ordrebogen matches mod **begge sider**: skjult efterspørgsel hos ejere
 (M1/M2) og **offentligt udbud via licenserede feeds (M3)**. Udbuddet er
 en trigger — ordrebogen er aktivet.
 
-**Tre zoner, tolv moduler, tretten invarianter.** Alt andet er implementation.
+**Tre zoner, femten moduler, tyve invarianter.** Alt andet er implementation.
+
+**Markedsposition (struktur C):** Optata ejer origination, mandat, budproces
+og prisdannelse; mægleren er udfører med scoped adgang. Se
+`docs/design/Optata - Efterspoergselsgravitation - struktur C v1.md`.
 
 ---
 
@@ -71,11 +75,14 @@ tætheden) = aktive DAR-adresser med BBR-boliganvendelse.
 | `identity` | MitID/OIDC, pseudonym, vault, step-up, ejerskab | C2,C3,C6,C8 |
 | `verification` | Attest, review, udløb, nedgradering | C8,C9 |
 | `disclosure` | PublicProfile, attester, **eneste vault-indgang** | C3,C4,C5,C6 |
-| `relay` | Tråde, beskeder, redaction, rate limit | C3,C5,C6 |
+| `relay` | Begrænset beskedfelt omkring OfferLedger, redaction, rate limit | C3,C5,C6 |
 | `consent` | Grants, afmelding, retention, audit | C3,C5,C9 |
 | `billing` | Abonnement, eksklusivitet, engangsgebyr, faktura | C4,C5,C6,C7 |
 | `insights` | Zone C-aggregater, k-anonymitet, gap | C6,C7 |
 | `listings` | Feed-adapters, licenshåndhævelse, bitemporal udbudsmodel, status-propagering, geokodning | C10 |
+| `mandates` | SaleMandate: sælgers autorisation, sameje-bekræftelse, ét aktivt mandat pr. adresse, tilbagekaldelse | — |
+| `offers` | OfferLedger: strukturerede, append-only bud, modbud-kæde, accept | — |
+| `campaigns` | Målrettet rækkevidde: samtykke, targeting-gulve, loft, mute, omdømme | — |
 
 **Arkitekturstil:** Modulær monolit (`apps/api`) + workers
 (`ingestion`, `agent_runner`, `matching`, `expiry`, `retention`).
@@ -87,7 +94,7 @@ EU-objektlager · EU-LLM-endpoint · Terraform · OIDC via MitID-broker.
 
 ---
 
-## 5. De tretten invarianter
+## 5. De tyve invarianter
 
 Disse må aldrig brydes. Hver har en guard-test i `tests/guards/`.
 
@@ -104,6 +111,8 @@ Disse må aldrig brydes. Hver har en guard-test i `tests/guards/`.
 7. **Reveal kræver seks guards i én transaktion:** pakke accepteret ∧
    betaling captured ∧ begge samtykker ∧ frisk step-up (≤5 min) ∧
    gyldig attest ∧ gyldigt ejerskab.
+   *Rettelse (v2.0): reveal kræver **accepteret bud** + samtykke + step-up,
+   to varianter — DIRECT (med gebyr) / AGENT_EXECUTED (uden). Se ADR-008.*
 8. **Zone C: k≥5 + afrunding til 5 + komplementær suppression.**
    Max 3 dimensioner. Mindste geo = postnummer. Ingen daglige deltas.
 9. **Én aktiv ordre pr. husstand+scope.** Samboende = co-buyer på samme ordre.
@@ -113,8 +122,25 @@ Disse må aldrig brydes. Hver har en guard-test i `tests/guards/`.
     Ingen scraping af portaler eller mæglersites — kun licenserede feeds.
 12. **M3 kontakter KØBEREN, aldrig ejeren.** Kun VERIFIED køber må
     kontakte mægler. Mægler skal CVR-matche udbuddets agent_org.
+    *Forkastet (v2.0): M3 som invitation/lead-kanal er erstattet af bud i
+    Optata — se invariant 16 og `docs/design/Optata - Markedsambition -
+    SaleMandate og OfferLedger v1.md`.*
 13. **Salgspakken tilbydes KUN i M1** (privat ejer uden mægler).
     Aldrig i M3 — mægleren er allerede formidler.
+14. **Ethvert mandat kræver MitID + ejerskabsbevis for ALLE ejere.**
+    Ét aktivt mandat pr. adresse. Tilbagekaldelse er øjeblikkelig.
+15. **Ethvert bud kræver VERIFIED køber med gyldig attest.**
+    Bud er append-only; statusændringer er events, aldrig overskrivning.
+16. **Intet bud, ingen accept og ingen identitetsudveksling sker**
+    **uden for Optatas rails.** Ingen eksport af ordrebog, bud eller kontakt.
+17. **Mægleradgang er scoped til (postnummer ∩ mandat hvor de er udfører).**
+    Ingen mægler ser bud på mandater, de ikke udfører.
+18. **Al mægler→køber-kommunikation går gennem Optatas inbox.**
+    Ingen kontaktdata eksporteres. Audience ≥25 og k≥5 på alle celler.
+19. **Køberens markedsføringssamtykke er eksplicit, formålsbundet og**
+    **tilbagekaldeligt.** Loft og mute håndhæves i domænet, ikke i UI.
+20. **Kampagner kræver eget aktivt udbud med gyldig licens, struktureret**
+    **indhold, attribution og scanning.** Ingen eksterne kontaktveje.
 
 ---
 
@@ -135,6 +161,11 @@ ACCESS: ANONYMOUS → EMAIL_SESSION → AUTHENTICATED → STEP_UP
 M3:     LISTING_MATCHED → AGENT_INVITED → IN_DIALOG → AGREED → FULFILLED_BY_AGENT
 SCOPE:  MUNICIPALITY ⊃ AREA ⊃ STREET ⊃ ADDRESS
 LISTING: ACTIVE → UNDER_OFFER → SOLD | WITHDRAWN | STALE
+
+MANDATE: DRAFT → ACTIVE → SUSPENDED | REVOKED | EXPIRED
+OFFER:   SUBMITTED → ACKNOWLEDGED → COUNTERED → ACCEPTED → FULFILLMENT → COMPLETED
+         └→ DECLINED | EXPIRED | WITHDRAWN
+CAMPAIGN: DRAFT → REVIEW → APPROVED → SENT | STOPPED
 ```
 
 **Progressiv identitet:** anonym browsing → e-mail-ordre → MitID →
@@ -213,6 +244,14 @@ Alle større beslutninger dokumenteres som ADR i `docs/architecture/adr/`.
   (jurist uge 6, spørgsmål L1–L3)
 - **L32–L37** — juridisk afklaring af udbudsmatch (M3), blokerer S6
   (spørgsmål i `docs/compliance/legal-questions-week6.md`)
+- **L38–L42** — struktur C: mandat-ejerskab, budplatform, "sælg uden mægler",
+  mandat- og deltagelsesvilkår (blokerer fase 3–5)
+- **L43–L48** — kampagner: samtykke, profilering, formidling, P2B, retention
+  (L43–L44 blokerer kampagne-modulet)
+
+**Rettet af markedsambitionen (v2.0):** M3 som invitation/lead-kanal er
+forkastet — køberen afgiver bud i Optata. Se ADR-017 og
+`docs/design/Optata - Efterspoergselsgravitation - struktur C v1.md`.
 
 **Kalendertid, ikke kodetid — bestilles uge 1:**
 Datafordeler-adgang · MitID-broker · medielicens.

@@ -2,6 +2,13 @@
 
 **Status:** Accepteret · **Juridisk afklaring:** L34–L35
 
+> **Status-opdatering (markedsambitionen, struktur C):** M3 som
+> invitation/lead-kanal er **forkastet** — køberen får ikke mæglerens
+> kontakt, køberen afgiver bud i Optata (OfferLedger). Se invariant 16 i
+> `docs/architecture/ARCHITECTURE.md` og
+> `docs/design/Optata - Efterspoergselsgravitation - struktur C v1.md`.
+> Ikke-salgspakke-princippet gælder uændret.
+
 **Kontekst:** Når en bolig allerede er til salg hos en mægler, er mægleren godkendt formidler. At tilbyde vores egen fulfillment-pakke ville være dobbelt formidling og dobbelt betaling.
 
 **Beslutning:**
