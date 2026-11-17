@@ -75,6 +75,21 @@ OfferLedger registrerer bud, modbud, vilkår, finansieringsstatus, frist og besl
 
 Begge veje er produktmæssige målbilleder. Ingen af dem må lanceres, før L38–L42 og de relevante øvrige juridiske spørgsmål er besvaret skriftligt.
 
+
+### 4.5 Koordineret flytning — RelocationCase
+
+Optata skal understøtte en families koordinerede flytning, hvor salg af nuværende bolig og køb af ny bolig vurderes som ét samlet beslutningsforløb. Dette er en central tværgående use case og ikke en ny handelstype.
+
+- **RelocationCase** er proces- og koordinationsobjektet for husstandens flyttemål, ønsket tidsvindue, boligbehov, økonomiske rammer, scenarier, afhængigheder og beslutningshistorik.
+- Salg og køb forbliver separate domænespor. Salgssporet refererer til SaleMandate og eventuelle OfferLedger-objekter. Købssporet refererer til købsintention/ordre, relevante boligmuligheder og eventuelle bud som køber.
+- RelocationCase ejer ikke mandatet, købsordren, boligen, buddet, finansieringsbeviset eller en købsaftale. Den koordinerer kun gennem versionsbundne referencer og domænekontrakter.
+- Et spor kan eksistere, afvente eller afsluttes uafhængigt af det andet. Afslutning, afvisning eller tilbagekaldelse i ét spor må ikke automatisk ændre juridisk status i det andet.
+- Deling mellem spor, med partner eller med andre personer kræver særskilt, formåls- og scopebestemt samtykke. Et generelt samtykke til flytteforløbet giver ikke automatisk adgang til identitet, økonomi, mandat eller bud.
+- Optata kan vise scenarier som “salg først”, “køb først” og “finansieringsafklaring nødvendig”, men skal skelne mellem verificerede fakta, daterede estimater, mulige match og uafklarede forhold. Et match er ikke dokumentation for tilgængelighed, finansiering eller egnethed.
+- Optata må ikke fremstille scenarier som finansiel, juridisk eller ejendomsmæssig rådgivning. Forhold, der kræver autoriseret eller individuel rådgivning, markeres og henvises til relevant fagperson.
+
+RelocationCase er et koordinerende workflow under Architecture Contract C-06 (saga). Eksterne og irreversible handlinger kræver særskilt command, autorisation, samtykke og audit efter C-07. Det samlede forløb må aldrig behandles som én distribueret ACID-transaktion eller én uadskillelig bolighandel.
+
 ## 5. Campaign og udbudsdata
 
 Campaign er ikke en genindførelse af M3-invitationer. Kampagner kan kun sendes gennem Optatas inbox til købere, som har givet særskilt, informeret, frivilligt og tilbagekaldeligt samtykke til det relevante formål. Mægleren må kun annoncere et udbud, som vedkommende har ret til at markedsføre, og som har gyldig licens-/kilde-reference.
@@ -172,8 +187,10 @@ En opgave er **Done**, når:
 8. Geografisk definition af kvarter og gade samt dens versionering.
 9. Hosting, observability, branch protection og uafhængig reviewkapacitet.
 10. Om gamle M3- og e-mail-/brevflows skal bevares som historik alene (anbefaling: ja).
+11. RelocationCase v1: præcis husstands-/deltagerrelation, samtykkegranularitet og scenariomodellens grænser.
 
 ## 13. Ændringslog
 
 - **v5.2:** Struktur C fastlagt som produktmål; SaleMandate, OfferLedger og Campaign indarbejdet; M3 som lead-/invitationkanal og gamle e-mail-/brevflows markeret som forældede; juridiske gates, faseplan og governance samlet.
+- **v5.2-addendum (Proposed):** RelocationCase som koordinerende flytteforløb; salg og køb forbliver separate domænespor.
 - **v5.1:** Historisk baseline fra 16. november 2026. Se `docs/historik/` eller git-historikken.
