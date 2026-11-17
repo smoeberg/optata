@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://optata.dk/contracts/feeds/agent-feed.v1.json",
+  "title": "AgentListingFeed",
+  "type": "object",
+  "required": ["feed_version", "agent_org", "generated_at", "listings"],
+  "additionalProperties": false,
+  "properties": {
+    "feed_version": { "const": "1.0" },
+    "agent_org": {
+      "type": "object",
+      "required": ["cvr"],
+      "additionalProperties": false,
+      "properties": {
+        "cvr":  { "type": "string", "pattern": "^[0-9]{8}$" },
+        "name": { "type": ["string", "null"] }
+      }
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "listings": {
+      "type": "array",
+      "maxItems": 5000,
+      "items": { "$ref": "#/$defs/listing" }
+    }
+  },
+
+  "$defs": {
+    "listing": {
+      "type": "object",
+      "required": ["source_ref", "status", "listed_at", "changed_at",
+                   "address", "property", "asking_price_dkk", "public_url"],
+      "additionalProperties": false,
+      "properties": {
+        "source_ref": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "status": { "enum": ["ACTIVE", "UNDER_OFFER", "SOLD", "WITHDRAWN"] },
+        "listed_at":  { "type": "string", "format": "date" },
+        "changed_at": { "type": "string", "format": "date-time" },
+
+        "address": {
+          "type": "object",
+          "required": ["street", "house_no", "zip", "municipality_code"],
+          "additionalProperties": false,
+          "properties": {
+            "street": { "type": "string", "maxLength": 120 },
+            "house_no": { "type": "string", "maxLength": 10 },
+            "floor": { "type": ["string", "null"], "maxLength": 10 },
+            "door": { "type": ["string", "null"], "maxLength": 10 },
+            "zip": { "type": "string", "pattern": "^[0-9]{4}$" },
+            "city": { "type": ["string", "null"] },
+            "municipality_code": { "type": "string", "pattern": "^[0-9]{4}$" },
+            "dar_address_id": { "type": ["string", "null"], "format": "uuid" }
+          }
+        },
+
+        "property": {
+          "type": "object",
+          "required": ["type", "living_area_m2", "rooms"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "enum": ["VILLA", "RAEKKEHUS", "EJERLEJLIGHED",
+                               "ANDELSBOLIG", "FRITID", "GRUND"] },
+            "living_area_m2": { "type": "integer", "minimum": 10, "maximum": 2000 },
+            "rooms": { "type": "integer", "minimum": 1, "maximum": 30 },
+            "lot_area_m2": { "type": ["integer", "null"], "minimum": 0 },
+            "build_year": { "type": ["integer", "null"], "minimum": 1400, "maximum": 2100 },
+            "energy_label": { "type": ["string", "null"], "enum": ["A","B","C","D","E","F","G",null] }
+          }
+        },
+
+        "asking_price_dkk": { "type": "integer", "minimum": 50000, "maximum": 200000000 },
+        "monthly_owner_cost_dkk": { "type": ["integer", "null"], "minimum": 0 },
+        "public_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+
+        "media": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hero_image_url": { "type": ["string", "null"], "format": "uri" },
+            "image_count": { "type": ["integer", "null"], "minimum": 0 }
+          }
+        },
+
+        "open_house": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "additionalProperties": false,
+            "properties": {
+              "from": { "type": "string", "format": "date-time" },
+              "to":   { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+
+      "allOf": [
+        {
+          "$comment": "Ingen personoplysninger i feedet (invariant: kun ejendomsdata)",
+          "not": {
+            "anyOf": [
+              { "required": ["seller_name"] },
+              { "required": ["seller_contact"] },
+              { "required": ["owner"] },
+              { "required": ["buyer"] },
+              { "required": ["internal_notes"] }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

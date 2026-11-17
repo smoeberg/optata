@@ -155,3 +155,43 @@ Dokumentationen er nu komplet nok til at bygge. Det, der mangler, er **fire hand
 | 4 | Book jurist med **L1–L31** til uge 6 | Nu | S4 og S5 i prod |
 
 Og én commit-rækkefølge: **`docs/` + `tests/guards/` ind før første feature-kode.** Testene er specifikationen — ikke dokumentation af noget, der allerede er bygget.
+
+---
+
+# Opdatering efter M3 — commit-plan og handlinger
+
+## Commit-plan (opdateret)
+
+| # | Commit | Indhold | Review |
+|---|---|---|---|
+| 1 | `docs/architecture/` | ARCHITECTURE.md v1.1 (13 invarianter) + ADR-001…018 | DK |
+| 2 | `docs/cases/` | C1–C9 + **C10 udbudsmatch** | DK |
+| 3 | `docs/security/` + `tests/guards/` | S3-guards + **11 nye M3-guards** | DK + security |
+| 4 | `contracts/` | openapi.yaml · events/*.json · **feeds/agent-feed.v1.json** | DK + data-lead |
+| 5 | `docs/compliance/` | retention · L1–L37 · **pilot-feed-aftale + bilag 1** | DK + jurist |
+| 6 | `docs/delivery/` | REQ-UA-001 · sprint-plan S0–S9 · backlogs S0–S6 | DK |
+| 7 | `docs/design/` + `i18n/da.json` | tokens · komponenter · **M3-tekster** | DK + designer |
+| 8 | `docs/runbooks/` | + `feed-failed`, `listing-stale` | DE + DK |
+
+**Rækkefølge-regel (uændret):** commit 3 og 4 (guards + kontrakter) ind **før** første feature-kode i S6.
+
+## De fire handlinger i den virkelige verden
+
+| # | Handling | Hvornår | Blokerer |
+|---|---|---|---|
+| 1 | **Pilot-feed-aftale** med én mægler i pilot-postnummeret (`docs/compliance/pilot-feed-aftale.md`) | Uge 1–3 | S6 overhovedet |
+| 2 | **Datafordeler-adgang** + **MitID-broker** bestilles | Uge 1 | S1, S3 → første krone |
+| 3 | **ADR-013**: data engineer fra md. 2 | Nu | Hele tidsplanen |
+| 4 | **Jurist med L1–L37** booket til uge 6 | Nu | S4, S5, S6 i prod |
+
+**Og én rækkefølge-regel:** byg `listing`-adapteren og M3-match, men **lad ikke Boligsiden-forhandlingen blokere noget**. Én mægler med ét feed i ét postnummer er nok til at bevise M3 — og det er den aftale, der også giver jer den første abonnent.
+
+---
+
+## Hvor vi står
+
+M3 er nu bygget ind i arkitekturen uden at bryde anonymitet, verifikation eller moat: **13 invarianter, 18 ADR'er, 9 sprints, én feed-kontrakt og én aftale der kan underskrives uden indkøbsafdeling.**
+
+Det vigtigste strategiske greb er, at **mægleren bliver leverandør i stedet for fjende** — og at salgspakken bevidst holdes ude af M3, så formidlingspositionen er ren.
+
+**Det næste arbejde er ikke at skrive mere.** Det er at få underskriften på pilot-aftalen, bestille de to adgange og træffe ADR-013. Alt andet er klar til at blive bygget.

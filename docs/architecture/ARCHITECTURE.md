@@ -1,6 +1,6 @@
 # Optata — Arkitektur
 
-**Version:** 1.0 · **Status:** Gældende · **Ejer:** DK-reviewer
+**Version:** 1.1 · **Status:** Gældende · **Ejer:** DK-reviewer
 **Læses før al kode.** Afvigelse kræver ADR + DK-godkendelse.
 
 ---
@@ -15,7 +15,11 @@ Systemet gør verificeret boligefterspørgsel synlig, anonym og handlingsbar:
 købere registrerer ønsker, ejere og professionelle reagerer på dem, og
 kontakt udveksles kun ved gensidig enighed.
 
-**Tre zoner, elleve moduler, ti invarianter.** Alt andet er implementation.
+Ordrebogen matches mod **begge sider**: skjult efterspørgsel hos ejere
+(M1/M2) og **offentligt udbud via licenserede feeds (M3)**. Udbuddet er
+en trigger — ordrebogen er aktivet.
+
+**Tre zoner, tolv moduler, tretten invarianter.** Alt andet er implementation.
 
 ---
 
@@ -44,6 +48,8 @@ kontakt udveksles kun ved gensidig enighed.
 | **BFE** | Ejendomsobjekt på tværs af registre | Samling af BBR/matrikel/EJF/VUR |
 | **Matrikel-id** | Jordstykket | Geometri, grund, planforhold |
 | **area_id** | Postnummer eller bydel | Tæthed, abonnement, eksklusivitet |
+| **street_id** | Vejen | Gade-scope (M3-match uden adresse-id) |
+| **municipality_id** | Kommunen | Kommune-scope (M3-match uden adresse-id) |
 | **pseudonym** | Personen (K-7F3A / E-2B91) | Al visning, al kommunikation |
 
 **BFE → adresse-id er 1:mange.** Andelsforeninger og udlejningsejendomme
@@ -69,6 +75,7 @@ tætheden) = aktive DAR-adresser med BBR-boliganvendelse.
 | `consent` | Grants, afmelding, retention, audit | C3,C5,C9 |
 | `billing` | Abonnement, eksklusivitet, engangsgebyr, faktura | C4,C5,C6,C7 |
 | `insights` | Zone C-aggregater, k-anonymitet, gap | C6,C7 |
+| `listings` | Feed-adapters, licenshåndhævelse, bitemporal udbudsmodel, status-propagering, geokodning | C10 |
 
 **Arkitekturstil:** Modulær monolit (`apps/api`) + workers
 (`ingestion`, `agent_runner`, `matching`, `expiry`, `retention`).
@@ -80,7 +87,7 @@ EU-objektlager · EU-LLM-endpoint · Terraform · OIDC via MitID-broker.
 
 ---
 
-## 5. De ti invarianter
+## 5. De tretten invarianter
 
 Disse må aldrig brydes. Hver har en guard-test i `tests/guards/`.
 
@@ -102,6 +109,12 @@ Disse må aldrig brydes. Hver har en guard-test i `tests/guards/`.
 9. **Én aktiv ordre pr. husstand+scope.** Samboende = co-buyer på samme ordre.
 10. **Sletning er to-lags.** Zone B slettes hårdt; pseudonym event-historik,
     audit og bogføring bevares. Tombstone må ikke kunne mappes til en person.
+11. **Ingen listing importeres uden aktiv `license_ref`.**
+    Ingen scraping af portaler eller mæglersites — kun licenserede feeds.
+12. **M3 kontakter KØBEREN, aldrig ejeren.** Kun VERIFIED køber må
+    kontakte mægler. Mægler skal CVR-matche udbuddets agent_org.
+13. **Salgspakken tilbydes KUN i M1** (privat ejer uden mægler).
+    Aldrig i M3 — mægleren er allerede formidler.
 
 ---
 
@@ -118,6 +131,10 @@ IDENT:  EMAIL → MITID_PRIVATE → (+ ownership_verified pr. adresse)
         MITID_ERHVERV for organisationer (CVR-bundet)
 
 ACCESS: ANONYMOUS → EMAIL_SESSION → AUTHENTICATED → STEP_UP
+
+M3:     LISTING_MATCHED → AGENT_INVITED → IN_DIALOG → AGREED → FULFILLED_BY_AGENT
+SCOPE:  MUNICIPALITY ⊃ AREA ⊃ STREET ⊃ ADDRESS
+LISTING: ACTIVE → UNDER_OFFER → SOLD | WITHDRAWN | STALE
 ```
 
 **Progressiv identitet:** anonym browsing → e-mail-ordre → MitID →
@@ -149,6 +166,8 @@ payload · reveal gennemført uden guards · prod-data i dev.
 | Expiry (attest/ordre/abonnement) | 03:00 | **Frys mægler-lead-lister** — sælg ikke stale leads |
 | Retention/sletning | 04:00 | P2 — et system der ikke sletter, bryder sit løfte |
 | Matching | Natligt + event | Genkør pr. område |
+| Listing-feeds | Hver 30. min | `feed-failed`; efter 24 t uden opdatering → STALE-markering |
+| Listing-reconciliation | Natligt 02:30 | ACTIVE uden feed-træf → STALE, **ikke SOLD** |
 | Agent-profil | Ved change-event | Review-kø må ikke tømmes automatisk |
 | Backup + restore-test | Dagligt / månedligt | Restore-test er en gate |
 
@@ -186,12 +205,14 @@ Se `docs/delivery/REQ-UA-001.md` og `docs/security/dk-review-checklist.md`.
 
 Alle større beslutninger dokumenteres som ADR i `docs/architecture/adr/`.
 
-**Accepteret:** ADR-001…012, 014, 015.
+**Accepteret:** ADR-001…012, 014, 015, 016, 017, 018.
 
 **Åbne:**
 - **ADR-013** — data engineer fra md. 2 (afgør første indtægt i md. 4)
 - **ADR-008** — juridisk formidlingsvurdering af match+relay+reveal
   (jurist uge 6, spørgsmål L1–L3)
+- **L32–L37** — juridisk afklaring af udbudsmatch (M3), blokerer S6
+  (spørgsmål i `docs/compliance/legal-questions-week6.md`)
 
 **Kalendertid, ikke kodetid — bestilles uge 1:**
 Datafordeler-adgang · MitID-broker · medielicens.
@@ -204,6 +225,7 @@ Datafordeler-adgang · MitID-broker · medielicens.
 |----------|---------------------|
 | `contracts/openapi.yaml` | API'ets form og fejl |
 | `contracts/events/*.json` | Historikkens form |
+| `contracts/feeds/agent-feed.v1.json` | Udbudsfeedets form |
 | `tests/guards/*.py` | Sikkerhed og invarianter |
 | `design/foundations/tokens.css` | Visuelt udtryk |
 | `apps/web/i18n/da.json` | Al brugervendt tekst |

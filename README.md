@@ -9,11 +9,15 @@ Verificeret efterspørgsel på boligmarkedet: købere registrerer, hvad de vil k
 | `docs/Optata - Projektgrundlag v5.1.md` | Masterdokumentet: forretning, koncept, data, mekanismer, sikkerhed, jura og leveranceplan |
 | `docs/historik/Optata - Projektgrundlag v5.0.md` | Forrige version |
 | `docs/bilag/` | De elleve tekniske bilag (06–16), uændrede, med en oversigt over hvad v5.1 har ændret |
-| `docs/design/` | Designleverancer: brandidé, visuel identitet, tekstdeck, mærke, mails, PDF og skærme |
-| `docs/architecture/ARCHITECTURE.md` | Arkitekturen: formål, zoner, moduler og de 10 invarianter |
-| `docs/backlog/S3.md`, `S4.md` og `S5.md` | Sprintbacklogs for S3–S5 (S0 og S1 ligger i `docs/backlog/S0-S1.md`) |
+| `docs/design/` | Designleverancer: brandidé, visuel identitet, tekstdeck, mærke, mails, PDF, skærme og udbudsmatch (M3) |
+| `docs/architecture/ARCHITECTURE.md` | Arkitekturen: formål, zoner, moduler og de 13 invarianter |
+| `docs/architecture/M3-opdatering.md` | M3-events, sprint-renummerering og nye guard-tests |
+| `docs/backlog/S3.md`, `S4.md`, `S5.md` og `S6.md` | Sprintbacklogs for S3–S6 (S0 og S1 ligger i `docs/backlog/S0-S1.md`) |
 | `docs/security/guards-s3.md` | Guard-tests til S3 som specifikation (udkast, afventer DK-review) |
-| `docs/compliance/legal-questions-week6.md` | Spørgsmål, juristen skal besvare skriftligt til uge 6 |
+| `docs/compliance/legal-questions-week6.md` | Spørgsmål, juristen skal besvare skriftligt (L1–L37) |
+| `docs/compliance/pilot-feed-aftale.md` | Pilot-aftale: mægler-feed mod gratis adgang (M3) |
+| `docs/adr/` | ADR-016–018: udbudskilder, M3 uden salgspakke, scope-hierarki |
+| `contracts/feeds/agent-feed.v1.json` | Feed-kontrakt for mæglerens udbudsfeed (JSON Schema) |
 | `docs/backlog/docs-struktur.md` | Foreslået samlet `docs/`-struktur og commit-plan |
 
 Ændringerne fra v5.0 til v5.1 står i §0.2 i masterdokumentet. De åbne beslutninger står i §0.3.

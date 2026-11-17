@@ -98,3 +98,22 @@ Dato / initialer: ____________________
 **Leverance fra juristen:** udfyldt skabelon for L1–L31 + rettede skabelontekster (L7, L16, L23) + klausuler (L20, L25, L31) + eventuel DPIA-vurdering (L15).
 
 ---
+
+---
+
+# Tilføjelse — udbudsmatch (M3): L32–L37
+
+## Spørgsmål (samme format som L1–L31)
+
+| # | Spørgsmål | Blokerer |
+|---|---|---|
+| **L32** 🔴 | Må vi importere, indeksere, matche og vise udbud fra **mæglerens eget feed** med den vedlagte licens (bilag A2)? Er parterne korrekt selvstændigt dataansvarlige? Kræves databehandleraftale nogen steder i kæden? | S6-01/04 |
+| **L33** 🔴 | Er en **Boligsiden-licens** nødvendig, når vi kun bruger mæglerens egne udbud? Hvad er vores rettigheder ved **aggregeret videresalg** i analyser (k≥5)? Skal attribution suppleres? | S6 + Demand Pro |
+| **L34** 🔴 | Er **køber→mægler-invitation + anonym relay-dialog** formidling efter ejendomsmæglerloven, når mægleren allerede er godkendt formidler for boligen? Vi tager **intet gebyr** i dette flow og tilbyder **ingen** fulfillment-pakke. | S6-10/11 |
+| **L35** 🔴 | Må vi sende en **konkret køberhenvendelse** til en uregistreret mægler på deres offentlige forretnings-e-mail? Hvilket grundlag, og hvilke krav til indhold, afmelding og frekvens (vores forslag: 1 pr. bolig pr. 14 dage, aggregeret)? | S6-08/10 |
+| **L36** | Kræver visning af **pris, status og udbudsdata** attribution eller andre vilkår? Er "Kilde: [Mægler] · Se annonce ↗" tilstrækkeligt? Må vi vise prisændringshistorik? | S6-09 |
+| **L37** | Må udbudsdata indgå i **Demand Pro/gap-analyse** som aggregeret statistik, eller kræver licensen særskilt vederlag? Hvad ved ophør af feed-aftale? | S9 |
+
+**Svarskabelon:** udfyld `Svar / Handlingsregel / Hjemmel / Konsekvens for kode / Blokerer deploy / Dato+initialer` som i `legal-questions-week6.md`.
+
+Se også `docs/compliance/pilot-feed-aftale.md` (licensvilkårene, bilag A2) og `docs/design/Optata - Udbudsmatch M3 v1.md`.
