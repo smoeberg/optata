@@ -88,7 +88,7 @@ def current_property(conn: psycopg.Connection, address_id: str) -> dict[str, Any
         conn,
         "SELECT address_id::text AS address_id, bfe, municipality_id, zip_id, neighbourhood_id,"
         " street_id, owner_kind, attrs, quality_flags, valid_from, recorded_at"
-        f" FROM zone_a.property WHERE address_id = %s AND {_CURRENT}",
+        f" FROM zone_a.property_public WHERE address_id = %s AND {_CURRENT}",
         (address_id,),
     )
     return rows[0] if rows else None
@@ -101,7 +101,7 @@ def area_facts(conn: psycopg.Connection, area: dict[str, Any]) -> dict[str, Any]
     """
     column = _MEMBERSHIP[area["level"]]
     codes = sorted(BOLIGKODER)
-    base = f"FROM zone_a.property WHERE {column} = %s AND {_CURRENT}"
+    base = f"FROM zone_a.property_public WHERE {column} = %s AND {_CURRENT}"
     residential = f"{base} AND attrs->>'anvendelse' = ANY(%s)"
     area_id = area["area_id"]
 
