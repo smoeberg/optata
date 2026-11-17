@@ -189,7 +189,7 @@ Dette er en produktrejse, ikke en juridisk konklusion om, hvornår en aftale ind
 12. Ved sameje kræves godkendelse fra alle nødvendige parter eller en gyldig, dokumenteret fuldmagt.
 13. Ved accepteret bud oprettes et completion-forløb. Det juridiske engagement er fortsat særskilt.
 14. Sælger følger dokumenter, forbehold, indfrielse, overtagelse og aflevering via platformens statusvisning.
-15. Sælger kan se, hvilke opgaver der tilhører advokatselskabet, bank, partner eller sælger selv.
+15. Sælger kan se, hvilke opgaver der tilhører Serviceselskabet, advokatselskabet, bank, ekstern partner eller sælger selv.
 
 ### 5.3 Sælgerens særlige scenarier
 
@@ -354,11 +354,14 @@ Hvert selskab har egne aftaler, fakturaer, regnskaber, betalingsmodtageroplysnin
 
 ### 9.4 Hvad skal besluttes nu – og hvad kan vente?
 
+**Fastlagt selskabsforudsætning:** Optata, advokatselskabet og Serviceselskabet er tre selvstændige juridiske selskaber. Dette genåbnes ikke som produktbeslutning; den konkrete lovlighed af aktiviteter, samarbejder og fælles forhold skal fortsat vurderes.
+
 **Skal besluttes nu:**
 - Abonnement er platformens primære indtægtsretning.
 - Platformens betaling er ikke betinget af, at en bestemt handel gennemføres.
 - B2B-adgang må ikke indebære automatisk salg/eksport af køberidentitet eller fortrolige oplysninger.
-- Advokatselskabets ydelser bestilles og faktureres særskilt.
+- Advokatselskabets juridiske ydelser bestilles og faktureres særskilt under eget klientengagement.
+- Serviceselskabets ikke-juridiske ydelser bestilles og faktureres særskilt under egen serviceaftale.
 - Ingen købesum eller klientmidler går gennem Optata.
 
 **Kan vente:**
@@ -382,7 +385,7 @@ Ingen rolle giver automatisk global adgang. Adgang kræver konkret sag, formål,
 
 | Prioritet | Leverance | Hvad skal være på plads |
 |---|---|---|
-| P1 | Handelsmodel og selskabs-/ansvarsgrænse | Optata-platform, advokatselskab og øvrige partnere; juridisk vurdering af faktisk aktivitet |
+| P1 | Handelsmodel og selskabs-/ansvarsgrænse | Optata-platform, advokatselskab, Serviceselskab og øvrige partnere; juridisk vurdering af faktisk aktivitet og samarbejdsmodel |
 | P2 | DIRECT | Salgsklargøring, boligpræsentation, dokumenter, fremvisning, Q&A, servicebestilling |
 | P3 | Fulfillment | Fra platformaccept til købsaftale, skøde, tinglysning, betaling og overtagelse |
 | P4 | Komplette køber-/sælgerrejser | Sameje, medkøber, andel, fuldmagt, finansieringsforbehold, aflysning, fortrydelse, dødsbo |
@@ -426,4 +429,4 @@ Ingen rolle giver automatisk global adgang. Adgang kræver konkret sag, formål,
 6. Opret et samlet scenariekatalog for sameje, andel, fuldmagt, dødsbo, finansiering, aflysning og fortrydelse.
 7. Opdatér først derefter v5.2, ADR'er, architecture contracts og S3–S7 backlogs.
 
-**Konceptets mål:** Kunden skal opleve én enkel digital rejse. Optata koordinerer platformens proces; advokatselskabet og de øvrige leverandører leverer deres egne, tydeligt afgrænsede ydelser og bærer deres respektive faglige ansvar.
+**Konceptets mål:** Kunden skal opleve én enkel digital rejse. Optata leverer platformen; Serviceselskabet leverer eller koordinerer særskilt bestilte ikke-juridiske ydelser; advokatselskabet leverer juridiske ydelser under eget klientengagement; øvrige leverandører bærer ansvaret for egne aftalte leverancer.
