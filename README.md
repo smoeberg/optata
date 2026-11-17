@@ -11,6 +11,7 @@ Optata udvikles som en platform, der forbinder ejendomsregisterdata, verificeret
 | [Projektgrundlag v5.2](docs/Optata%20-%20Projektgrundlag%20v5.2.md) | **Autoritativ produkt- og beslutningsbaseline** |
 | [Arkitektur v2.1](docs/architecture/ARCHITECTURE.md) | Teknisk målarkitektur og invarianter |
 | [ADR-017-SC](docs/adr/ADR-017-structure-c-supersession.md) | Struktur C og afløst M3-model |
+| [Area Intelligence v1.0](docs/product/AREA-INTELLIGENCE.md) | Produktretning for geografisk navigation, områdeprofiler, faciliteter, AI-verifikation og statistik |
 | [S0–S1 backlog](docs/backlog/S0-S1.md) | Fundament og register/API |
 | [S3 backlog](docs/backlog/S3.md) | MitID, ordre og verifikation |
 | [S4 backlog](docs/backlog/S4.md) | SaleMandate |
