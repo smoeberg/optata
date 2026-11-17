@@ -1,6 +1,6 @@
 # Optata — handelsmodel og Product & Service Blueprint
 
-**Version:** 0.1 · **Dato:** 17. november 2026  
+**Version:** 0.2 · **Dato:** 17. november 2026  
 **Status:** Stifterinput indarbejdet · arbejdsgrundlag til produktdesign · ikke juridisk godkendt
 
 > Dokumentet omsætter stifterens seneste beslutningsretning til en samlet produkt- og servicearkitektur. Det er ikke en ændring af den normative v5.2-baseline, før beslutningerne er godkendt og indarbejdet dér. Juridisk selskabsstruktur, formidlerstatus, advokatetik, databeskyttelse og forbrugerret skal vurderes skriftligt af uafhængig rådgiver.
@@ -239,18 +239,20 @@ Flere arvinger uden enighed, omstridte boer, uklare fuldmagter og interne arveud
 
 ## 7. Budmekanik og skjult minimumspris
 
-### 7.1 Minimumspris / sælgers bundgrænse
+### 7.1 Fortrolig minimumspris og sælgernotifikation
 
-Stifterens retning:
-- Sælger kan angive en minimumspris/bundgrænse.
-- Bundgrænsen er fortrolig og må ikke vises direkte til potentielle købere.
-- Optata må ikke afsløre den via API, HTML, metadata, fejlsvar, analytics, B2B-eksport eller partneradgang.
-- Sælger kan se, hvor bud ligger i forhold til egen bundgrænse.
-- Køber kan eventuelt få et neutralt procent-/intervalsignal om buddets position uden at få selve bundgrænsen.
+Stifterens præcisering er:
 
-**Åbent fortolkningspunkt:** Stifterens formulering om, hvem der skal se en procentvis “match” mod minimumsprisen, er ikke helt entydig. Arbejdshypotesen her er, at køber kan se et groft signal om, hvor tæt eget bud ligger på sælgers fortrolige bundgrænse, uden at grænsen kan udregnes. Det skal bekræftes før UX og API designes. Alternativt vises procenten kun til sælger.
+- Sælger kan angive en minimumspris/bundgrænse, som er fortrolig.
+- Køber får **ikke** vist en procent, et interval eller en anden indikator for, hvor tæt buddet ligger på minimumsprisen.
+- Når et indkommet bud er **20 % under minimumsprisen eller højere**, sendes der en notifikation til den potentielle sælger.
+- Det betyder som udgangspunkt, at buddet når notifikationstærsklen, når budbeløbet er mindst 80 % af sælgers fortrolige minimumspris.
+- Notifikationen går kun til den/de relevante sælger(e) og eventuelle gyldigt bemyndigede repræsentanter. Den afslører ikke minimumsprisen til køber, andre købere eller uvedkommende B2B-parter.
+- Bud under tærsklen registreres fortsat efter de almindelige budregler, men udløser ikke denne særlige tærskelnotifikation. Sælger skal fortsat kunne finde dem i sin budoversigt, medmindre en anden eksplicit regel besluttes.
+- Tærskelberegningen udføres server-side. Minimumsprisen må ikke kunne udledes via API, HTML, metadata, fejlbeskeder, analytics, B2B-eksport, timing eller gentagne forespørgsler.
+- Hvis sælger ændrer minimumsprisen, gemmes en versionshistorik med tidspunkt og aktør. Tærsklen for nye bud beregnes efter den gældende version; historiske bud og allerede udsendte notifikationer omskrives ikke.
 
-Et procenttal kan lække bundgrænsen gennem gentagne bud, kendt budpris, afrunding eller små intervaller. Derfor skal disclosure-modellen testes mod rekonstruktion og differencing. Sikker standard indtil beslutning: kun sælger ser den præcise procentuelle afstand; køber får alene almindelig budstatus eller et groft, ikke-inverterbart signal.
+**Eksempel:** Sælger har angivet en fortrolig minimumspris på 2.000.000 kr. Et bud på 1.600.000 kr. eller mere udløser notifikation til sælger. Køber får ingen besked om, at buddet har ramt en tærskel, og får ikke at vide, hvor minimumsprisen ligger.
 
 ### 7.2 Budregler, der skal fastlægges
 
@@ -276,6 +278,10 @@ Et procenttal kan lække bundgrænsen gennem gentagne bud, kendt budpris, afrund
 - Dødsbo suspenderes under accept.
 - Idempotent replay af samme command.
 - Minimumspris kan ikke udledes fra API, log, partnerrolle eller gentagne bud.
+- Bud på præcis 80 % af minimumsprisen udløser sælgernotifikation.
+- Bud lige under 80 % udløser ikke tærskelnotifikation.
+- Køberens UI/API afslører ikke, om tærsklen er nået.
+- Ændring af minimumspris påvirker kun nye tærskelvurderinger efter den nye versions ikrafttræden.
 - Udfører-/advokathandoff fejler og kan genoptages uden dobbelt handling.
 
 ## 8. Fra accepteret bud til afsluttet handel
@@ -402,7 +408,7 @@ Ingen rolle giver automatisk global adgang. Adgang kræver konkret sag, formål,
 | B-05 | Platformens primære forretning er abonnement; betaling ikke betinget af afsluttet handel | Stifterretning |
 | B-06 | B2B kan købe adgang til samtykkebaserede købermuligheder | Produktretning; præcis data-/kontaktmodel kræver privacy/juridisk review |
 | B-07 | Sælger kan angive fortrolig minimumspris | Produktretning |
-| B-08 | Procentvis match mod minimumspris | Åbent: hvem ser signalet, og hvor præcist? |
+| B-08 | Bud på mindst 80 % af fortrolig minimumspris udløser notifikation til sælger; ingen procent-/matchindikator vises til køber | Stifterpræcisering indarbejdet |
 | B-09 | Priser og abonnementspakker | Udskydes |
 | B-10 | Pilotområde og markedsopstart | Udskydes |
 | B-11 | Dødsbo: v1 med manuel review af klare ene-arving-/bobestyrerforløb | Foreslået scope; juridisk review |
