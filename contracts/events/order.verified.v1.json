@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://optata.dk/contracts/events/order.verified.v1.json",
+  "allOf": [{ "$ref": "_envelope.v1.json" }],
+  "properties": {
+    "type": { "const": "order.verified" },
+    "zone": { "const": "B" },
+    "payload": {
+      "type": "object",
+      "required": ["verification_id", "method", "expires_at"],
+      "additionalProperties": false,
+      "properties": {
+        "verification_id": { "type": "string" },
+        "method":          { "enum": ["BANK_DOCUMENT", "BANK_ATTESTATION", "BANK_API", "EQUITY"] },
+        "issuer_code":     { "type": ["string", "null"] },
+        "budget_band":     { "type": "string" },
+        "expires_at":      { "type": "string" },
+        "reviewed_by":     { "type": "string" }
+      }
+    }
+  }
+}

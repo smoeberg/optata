@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://optata.dk/contracts/events/order.created.v1.1.json",
+  "$comment": "v5.1: orders are created after MitID login, so the level at creation is QUALIFIED. CURIOS no longer exists.",
+  "allOf": [{ "$ref": "_envelope.v1.json" }],
+  "properties": {
+    "type": { "const": "order.created" },
+    "schema_version": { "const": "1.1.0" },
+    "zone": { "const": "B" },
+    "payload": {
+      "type": "object",
+      "required": ["scope", "area_id", "level", "household_key"],
+      "additionalProperties": false,
+      "properties": {
+        "scope":         { "enum": ["AREA", "ADDRESS"] },
+        "area_id":       { "type": "string" },
+        "address_id":    { "type": ["string", "null"] },
+        "level":         { "const": "QUALIFIED" },
+        "household_key": { "type": ["string", "null"] },
+        "criteria_hash": { "type": "string" },
+        "channel":       { "type": ["string", "null"] }
+      }
+    }
+  }
+}
