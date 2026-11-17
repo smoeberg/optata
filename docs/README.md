@@ -5,6 +5,7 @@
 - `architecture/ARCHITECTURE.md` — moduler, datazoner, invariants, flows og systemgrænser.
 - `architecture/ARCHITECTURE-CONTRACTS-v1.0.md` — foreslåede tværgående sikkerheds-, transaktions-, event- og workflowkontrakter. Status er Proposed indtil review.
 - `adr/ADR-017-structure-c-supersession.md` — beslutningsretning for struktur C.
+- `adr/ADR-019-relocation-case.md` — foreslået koordineret flytteforløb med separate salg- og købsspor.
 - `backlog/S0-S1.md`, `S3.md`, `S4.md`, `S5.md`, `S6.md` — implementeringsplan.
 
 ## Supplerende specifikationer
