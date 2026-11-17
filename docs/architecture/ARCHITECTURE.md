@@ -1,118 +1,179 @@
-# Optata — Arkitektur v2.0
-Status: Gældende · Afstemt med projektgrundlag v5.1 · Ejer: DK-reviewer
-Afvigelse kræver ADR + DK-godkendelse.
+# Optata — Arkitektur v2.1
 
-## 1. Formål
-Optata er et efterspørgselsdrevet boligmarked. Vi ejer origination,
-mandat, budproces og prisdannelse. Mæglere deltager i vores rails,
-fordi efterspørgslen og mandaterne ligger her.
+**Status:** Målarkitektur · 17. november 2026  
+**Autoritativt grundlag:** `docs/Optata - Projektgrundlag v5.2.md`  
+**Ejer:** Stifter + teknisk reviewer  
+**Regel:** Ændringer i invariants, zoner, moduler eller transaktionsflows kræver ADR og review. Juridiske release gates er beskrevet i v5.2 §10.
 
-Fire lag: register (zone A) · ordrebog (verificeret efterspørgsel) ·
-marked (mandat + bud) · distribution (analyse, rækkevidde, API).
+## 1. Formål og systemgrænse
 
-## 2. v5.1 — gældende beslutninger
-- MitID fra starten. Ingen e-mail-ordrer, intet CURIOS-niveau.
-- Ingen uopfordret kontakt til ejere. Ejeren logger selv ind.
-- Ejersiden er mandat-indgang med 12 måneders adgang.
-- Al notifikation er frivilligt tilvalg (opt-in).
-- Digital Post kun efter aftale med leverandør.
-- M3-lite forkastet: køberen får aldrig mæglerens kontaktdata.
+Optata er en modulær markedsplatform, der forbinder registerdata, verificeret efterspørgsel, sælgermandater, strukturerede bud, udførende partnere og samtykkebaseret distribution.
 
-## 3. Datazoner
-A: offentlige registre, claims, udbud (licens), rapporter — dev tilladt.
-B: identitet, ordrer, attester, mandater, bud, kampagner, samtykke —
-   kun EU-prod, RLS, kryptering, audit. Aldrig dev, aldrig eksport.
-C: aggregeret, k>=5, afrundet, komplementær suppression — licenseret.
+Optata ejer platformens proces- og datalag. Det er ikke ensbetydende med, at Optata må udføre lovregulerede formidleropgaver. Systemet skal understøtte en juridisk godkendt rollefordeling uden at antage, at platformens tekniske kontrol giver en tilladelse.
 
-## 4. Nøgler
-DAR adresse-id · BFE (1:mange til adresser) · matrikel-id ·
-area_id · street_id · municipality_id (DAGI) · pseudonym.
-CPR lagres aldrig.
+## 2. Arkitekturprincipper
 
-## 5. Moduler (14)
-registry · reports · agent · orderbook · identity · verification ·
-disclosure · consent · billing · insights · listings ·
-mandates · offers · campaigns
+- Modulær monolit + workers. Ingen mikroservices før dokumenteret behov.
+- Kontrakter først: OpenAPI, event schemas og DB-migrationer versionsstyres.
+- PostgreSQL/PostGIS med zone-separation, DB-roller og RLS.
+- Zone B er lukket som standard; kun eksplicitte service-roller får adgang.
+- Alle følsomme handlinger kræver purpose, scope, actor og audit.
+- Bitemporalitet bruges på registerfakta; forretningshændelser er append-only.
+- Alle eksterne data har source, license, provenance, observed_at og valid-time.
+- Feature flags kan slukke features, aldrig omgå guards.
+- Syntetiske fixtures er deterministiske og tydeligt vandmærkede.
 
-Modulær monolit + workers: ingestion, agent_runner, matching,
-expiry, retention, feeds, campaign_delivery, reputation.
-core/* må ikke importere apps/*. Kommunikation via domæne-events.
+## 3. Zoner
 
-## 6. De 20 invarianter
-1.  BFE → adresse-id er 1:mange.
-2.  Al registerdata er bitemporal; historik overskrives aldrig.
-3.  order_event, offer og audit er append-only; upcast ved læsning.
-4.  Kun disclosure må læse vault.
-5.  Kun VERIFIED med gyldig attest må kontakte ejer eller afgive bud.
-6.  Ejerskabsverifikation kræves før visning af interesse;
-    ejerskifte tilbagekalder automatisk.
-7.  Reveal kræver accepteret bud ∧ gensidigt samtykke ∧ frisk step-up
-    ∧ gyldig attest ∧ gyldigt ejerskab — i én transaktion.
-    DIRECT tillige betaling; AGENT_EXECUTED tillige CVR-match.
-8.  Zone C: k>=5, afrunding til 5, komplementær suppression,
-    max 3 dimensioner, mindste geo = postnummer.
-9.  Én aktiv ordre pr. husstand+scope; samboende = co-buyer.
-10. Sletning er to-lags: zone B væk, pseudonym historik bevaret.
-11. Ingen listing importeres uden aktiv license_ref. Ingen scraping.
-12. M3 kontakter køberen, aldrig ejeren. Mægler skal CVR-matche
-    udbuddets agent_org.
-13. Salgspakken tilbydes kun i DIRECT (ejer uden mægler).
-14. Mandat kræver MitID + ejerskabsbevis for ALLE ejere.
-    Ét aktivt mandat pr. adresse. Tilbagekaldelse øjeblikkelig.
-15. Bud kræver VERIFIED køber med gyldig attest. Append-only.
-16. Intet bud, ingen accept, ingen identitetsudveksling uden for
-    Optatas rails. Ingen eksport af ordrebog, bud eller kontakt.
-17. Mægleradgang = (postnummer ∩ mandat hvor de er udfører).
-18. Al mægler→køber-kommunikation går gennem Optatas inbox.
-    Audience >=25 og k>=5 på alle celler.
-19. Markedsføringssamtykke er eksplicit, formålsbundet, tilbagekaldeligt.
-    Loft og mute håndhæves i domænet.
-20. Kampagner kræver eget aktivt udbud med licens, struktureret
-    indhold, attribution og scanning. Ingen eksterne kontaktveje.
+| Zone | Indhold | Miljø | Hovedkontrol |
+|---|---|---|---|
+| A | Register, geometri, licenserede listings, claims, rapporter | Dev/test/prod efter kildevilkår | kilde-/licensspor, bitemporalitet, read scopes |
+| B | MitID-identitet, ordrer, attester, ejerskabsbevis, samtykke, mandat, bud, kampagneinteraktion, audit | Kun kontrolleret EU-prod for rigtige data | RLS, kryptering, mindst privilegium, retention, audit |
+| C | Aggregerede/afledte datasæt til B2B | Licenseret publicering | k-regler + suppression + differens-/re-identifikationskontrol |
 
-## 7. Tilstandsmaskiner
-ORDER:   ACTIVE → MATCHED → OFFER_SUBMITTED → ACCEPTED → FULFILLED
-         └→ PAUSED | WITHDRAWN | EXPIRED | ERASED
-MANDATE: DRAFT → ACTIVE → SUSPENDED | REVOKED | EXPIRED
-OFFER:   SUBMITTED → ACKNOWLEDGED → COUNTERED → ACCEPTED | DECLINED | EXPIRED
-LISTING: ACTIVE → UNDER_OFFER → SOLD | WITHDRAWN | STALE
-CAMPAIGN:DRAFT → REVIEW → APPROVED → SENT → STOPPED | REJECTED
-IDENT:   MITID_PRIVATE (+ ownership pr. adresse) | MITID_ERHVERV (CVR)
-ACCESS:  AUTHENTICATED → STEP_UP  (ingen anonym identitet, ingen e-mail-ordre)
+k≥5 er ikke alene tilstrækkeligt til anonymisering. Zone C-publicering kræver dokumenteret vurdering af kombinationer, tidsserier, geografisk granularitet, differensangreb og eksterne hjælpedata.
 
-## 8. Markedets to veje
-DIRECT:          mandat hos Optata · bud i Optata · advokatpartner
-                 gennemfører · sælger betaler 10.000 kr. fast gebyr
-AGENT_EXECUTED:  mandat hos Optata · bud i Optata · valgt mægler
-                 udfører · Optata tjener deltagelsesabonnement
-Default er DIRECT. Mægleren er sælgers tilvalg, ikke en port.
+## 4. Moduler og ejerskab
 
-## 9. Sikkerhed
-MitID via broker (OIDC), ingen CPR. Step-up <=5 min ved følsomme kald.
-RLS i DB. Audit append-only 5 år, skrives før data returneres.
-Indholdsscanning: deterministisk først, LLM som supplement.
-P1: vault-adgang uden for disclosure · zone B i public payload ·
-reveal uden guards · prod-data i dev · kampagne uden samtykke.
+| Modul | Ansvar | Må ikke eje |
+|---|---|---|
+| registry | registerkilder, bitemporal ejendomsmodel | køber-/sælgeridentitet |
+| reports | rapporter og områdeprofiler | rå zone B |
+| agent | claims/medieanalyse med provenance | automatisk publicering uden review |
+| orderbook | købsintention, status, scope, matching | identitetsvault |
+| identity | MitID/OIDC, pseudonymer, sessions | CPR-lagring |
+| verification | attestbehandling, reviewer, udløb | mandatbeslutninger |
+| disclosure | eneste kontrollerede adgang til identitetsoplysninger | forretningsbeslutninger |
+| consent | versioneret samtykke og tilbagekaldelse | skjult samtykkeafledning |
+| billing | betaling for platformprodukter | escrow/købesum |
+| insights | aggregering, metrics, k-anonymitetskontrol | re-identifikation |
+| listings | licenserede udbud, status, attribution | scraping eller uautoriseret videredistribution |
+| mandates | SaleMandate, parter, scope, executor, vilkår | antagelse om juridisk formidlingstilladelse |
+| offers | OfferLedger, bud, modbud, accept og historik | fri chat eller uautoriseret aftaleindgåelse |
+| campaigns | samtykkebaseret kampagnestyring og levering | ekstern kontakt eller målretning uden samtykke |
 
-## 10. Drift
-ingestion 02:00 · feeds hver 30 min · reconciliation 02:30 ·
-expiry 03:00 (fejl → frys lead-lister) · retention 04:00 ·
-campaign_delivery løbende med loft · reputation natligt.
-STALE ≠ SOLD. dwelling_count-ændring >2 % → frys tætheds-KPI.
+**Grænser:** Et modul skriver kun egne tabeller. Andre moduler bruger kontrakter/domæneevents. Direkte tabeladgang på tværs er forbudt, undtagen eksplicitte read models med ejer og test.
 
-## 11. Leverancemodel
-UA-seniorteam + AI-kodegenerering. DK-reviewer ejer guards,
-migrations, finansiel/juridisk logik, RLS, samtykke, retention.
-Kontrakten er specifikationen. Koden er output. CI er dommeren.
-Guards tilføjes i samme PR. Branch protection håndhæves.
+## 5. Nøgler og relationer
 
-## 12. Hvor sandheden bor
-contracts/openapi.yaml · contracts/events/*.json ·
-contracts/feeds/agent-feed.v1.json · tests/guards/*.py ·
-design/foundations/tokens.css · apps/web/i18n/da.json ·
-docs/compliance/retention.md
+- `address_id`: DAR-adresse.
+- `bfe_id`: fast ejendom; relation til adresser er 1:mange.
+- `matrikel_id`: matrikulær identitet.
+- `area_id`, `street_id`, `municipality_id`: versionsbundne geografiske scopes.
+- `identity_id`: intern personidentitet, aldrig CPR.
+- `household_key`: dedup-nøgle med formålsbegrænset scope.
+- `mandate_id`, `offer_id`, `listing_id`, `campaign_id`: UUID.
+- `source_ref` + `license_ref`: proveniens og brugsret for eksterne data.
 
-## 13. Åbne punkter
-ADR-013 (data engineer fra md. 2) · L38–L40 (mandat/bud/positionering)
-· L43–L44 (kampagnesamtykke og profilering) · Datafordeler inkl. EJF
-og DAGI · MitID-broker · Digital Post-aftale · mægler-feed-aftale.
+Alle relationer mellem personidentitet og ejendom/ordre skal være formålsbundne, RLS-beskyttede og auditerede.
+
+## 6. Ufravigelige invarianter
+
+### Data og adgang
+1. BFE→adresse er 1:mange; en BFE må ikke forveksles med en boligadresse.
+2. Registerfakta er bitemporale; historik overskrives aldrig.
+3. Ordre-, mandat-, bud- og audit-hændelser er append-only; status er en projektion af hændelser.
+4. Kun disclosure-service kan læse identitetsvault; support/admin har ingen bypass.
+5. Zone B kan ikke læses af public_reader eller almindelige app-roller; DB/RLS håndhæver dette.
+6. Alle følsomme handlinger auditeres før data returneres eller sideeffekt udføres.
+7. Ingen CPR lagres i DB, logs, events, traces eller fixtures. Transient behandling kræver særskilt dokumenteret godkendelse.
+
+### Efterspørgsel og verifikation
+8. Kun VERIFIED med gyldig attest kan afgive bud eller indgå i VERIFIED-density.
+9. Attestudløb, tilbagetrækning eller falsk/manglende bevis fjerner VERIFIED-rettigheder øjeblikkeligt.
+10. Én aktiv ordre pr. husstand+scope; medkøbere knyttes til samme ordre.
+11. Matching skal gemme modelversion, score og reason codes; matchresultat må ikke i sig selv udløse kontakt eller identitetsdeling.
+
+### Mandat og bud
+12. SaleMandate kræver identifikation og dokumenteret ret/fuldmagt for alle nødvendige parter; sameje kan ikke reduceres til én owner_identity.
+13. Højst ét aktivt, konfliktende mandat pr. ejendom/adresse efter en eksplicit konfliktregel; DB-constraint og transaktion håndhæver dette.
+14. Mandat har versionerede vilkår, scope, executor, start/slut, audit og øjeblikkelig suspendering/tilbagekaldelse efter gyldig anmodning.
+15. Bud kræver aktivt mandat, VERIFIED-køber, gyldig attest og gyldig budfrist.
+16. Bud er append-only. Ændringer/tilbagetrækninger/modbud er nye hændelser, aldrig overskrivning.
+17. Accept er en platformshændelse og må ikke betegnes som endelig købsaftale, før den juridiske aftalemodel udtrykkeligt definerer det.
+18. Ingen bud, køberidentitet eller kontaktdata eksporteres uden for Optatas rails undtagen via godkendt fulfillment og dataminimeret partneroverdragelse.
+19. Mægler-/partneradgang er skæringsmængden af organisationens godkendte scope, aktiv participation license og det konkrete mandat/arbejdsopgave.
+
+### Listings, Campaign og aggregering
+20. Listing kræver gyldig license_ref og kildeattribution; ingen scraping.
+21. Campaign kræver eget aktivt og licenseret udbud, godkendt indhold, aktivt formålsspecifikt samtykke og alle leveringsguards.
+22. Samtykke er eksplicit, versioneret, formålsbundet og tilbagekaldeligt; tilbagekaldelse stopper fremtidig levering.
+23. Mute, suppression, quiet hours og frekvenslofter kontrolleres i domænet og ved hver levering.
+24. Audience-gulv og k-anonymitet kontrolleres efter samtykke-, mute-, suppression-, relevans- og frekvensfiltrering. Ingen rå modtagerliste eller pseudonymeksponering til annoncør.
+25. Listing SOLD/WITHDRAWN/STALE eller licensudløb stopper relevante kampagner og match-notifikationer.
+26. Zone C-publicering kræver k≥5 plus suppression og dokumenteret angrebs-/re-identifikationsvurdering.
+
+## 7. Domæneflows
+
+### 7.1 Order → VERIFIED
+MitID login → ordre → QUALIFIED → attest upload/review → VERIFIED → udløb/fornyelse. Ingen e-mail-opgradering eller CURIOS.
+
+### 7.2 SaleMandate
+DRAFT → PARTIES_PENDING → REVIEW (hvis manuel kontrol) → ACTIVE → SUSPENDED / REVOKED / EXPIRED / COMPLETED.
+
+Mandat aktiveres først, når alle nødvendige parter, ejerskabsbeviser, vilkår og executor-mode er valideret. Sameje repræsenteres som relationer, ikke en enkelt owner_identity-kolonne.
+
+### 7.3 OfferLedger
+SUBMITTED → ACKNOWLEDGED → COUNTERED (nyt offer) → ACCEPTED / DECLINED / WITHDRAWN / EXPIRED. Hver statusændring er event. Accept skal indeholde aktuel mandate version, offer version, tidsstempel og actor. Fulfillment startes separat.
+
+### 7.4 Campaign
+DRAFT → VALIDATING → REVIEW → APPROVED → SCHEDULED → DELIVERING → COMPLETED; sidegrene REJECTED, STOPPED, CANCELLED. Hver levering revaliderer licens, samtykke, mute, suppression, relevans, frekvens og quiet hours.
+
+### 7.5 Listing
+INGESTED → VALIDATED → ACTIVE → UNDER_OFFER → SOLD / WITHDRAWN / STALE / LICENSE_BLOCKED. STALE må aldrig automatisk fortolkes som SOLD.
+
+## 8. To udførelsesveje
+
+| | DIRECT | AGENT_EXECUTED |
+|---|---|---|
+| Mandat | Optata-platformen registrerer mandat | Samme |
+| Budrails | Optata OfferLedger | Samme |
+| Udførelse | Godkendt juridisk/closingpartner | Valgt mægler/udfører |
+| Optatas rolle | Platform inden for juridisk godkendt scope | Platform + scoped koordinering |
+| Kommercielt vederlag | Ikke fastlagt som endelig pris | Deltagelses-/abonnementsmodel er hypotese |
+
+Begge veje er målarkitektur. Ingen prod-release uden LG-1, LG-5 og relevante betalings-/forbrugerretlige gates.
+
+## 9. API- og eventprincipper
+
+- OpenAPI og event schemas er source of truth; ændres før implementering.
+- Alle commands er idempotente og har actor, purpose, scope, idempotency key og trace_id.
+- Events har event_id, type, schema_version, occurred_at, recorded_at, actor, zone, aggregate, trace_id og payload.
+- Fejl er stabile maskinlæsbare koder; ingen følsomme værdier i fejlbeskeder.
+- Eksterne webhooks signeres, replay-beskyttes og valideres mod versioneret schema.
+
+## 10. Juridiske gates
+
+- LG-1: L1–L5 samlet rolle/formidling/ansvar.
+- LG-2: L11–L16 persondata/retention/CPR/DPIA.
+- LG-3: L26–L31 register-, medie-, tredjelands- og IP-rettigheder.
+- LG-4: L32–L37 listings/feed.
+- LG-5: L38–L42 mandat, bud, executor og partnerrolle.
+- LG-6: L43–L48 Campaign, samtykke, profilering, P2B og retention.
+- LG-7: L21–L25 betaling, AML og forbrugerret.
+
+Åbne spørgsmål er release blockers, ikke implicitte godkendelser.
+
+## 11. Implementeringsstatus pr. baseline
+
+| Område | Status |
+|---|---|
+| S0 skelet, modulgrænser, syntetiske data, CI-baseline | Delvist implementeret; se S0-S1 backlog |
+| S1 bitemporal register, testadapter, density, zone A API | Første version implementeret; rigtige adaptere/geometri/UI mangler |
+| S2 analyse/agent | Ikke dokumenteret som færdig |
+| MitID/ordre/attest/vault | Ikke implementeret |
+| SaleMandate | Designmål, ikke implementeret |
+| OfferLedger | Designmål, ikke implementeret |
+| Campaign | Specifikation, ikke implementeret |
+| Listing feed | Kontrakt/spec, ikke produktionsklar |
+| Partner fulfillment | Ikke implementeret |
+
+## 12. Ændringsstyring
+
+Ændringer af invarianter 12–26, mandat-/budstate, datazoner eller partnerroller kræver:
+1. ADR med kontekst, valgmuligheder, beslutning, konsekvenser og status.
+2. Opdatering af relevante kontrakter og sprint backlog.
+3. Negative tests/guards.
+4. Menneskelig review af sikkerhed og juridiske antagelser.
+
+**Denne arkitektur er teknisk målarkitektur, ikke juridisk godkendelse.**

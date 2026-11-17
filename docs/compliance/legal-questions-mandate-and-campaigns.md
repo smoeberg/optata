@@ -1,3 +1,5 @@
+> **Status mod projektgrundlag v5.2:** L38–L42 er release gate for SaleMandate, OfferLedger og executor access (S4–S5). L43–L48 er release gate for Campaign (S6). Prioriteringen nedenfor erstatter ældre faseangivelser i dette bilag. Svar skal være skriftlige; spørgsmålene er ikke godkendelser.
+
 # OPTATA — Jurist-bilag: mandat, budbog og kampagner (L38–L48)
 
 **Format:** Svar + handlingsregel + hjemmel + konsekvens for kode + blokerer deploy + dato/initialer.
@@ -44,9 +46,9 @@ Dato / initialer: ____________________
 
 | # | Handling | Blokerer |
 |---|---|---|
-| 1 | **L38–L40 til juristen** — mandat, budbog, positionering | Fase 4–5 (der hvor markedet vender) |
-| 2 | **L43–L44** — kampagnesamtykke og profilering | Fase 3 (acquisition-motoren) |
+| 1 | **L38–L42 til juristen** — mandat, budbog, udfører og positionering | S4–S5 production gate |
+| 2 | **L43–L48** — samtykke, profilering, indhold, P2B og retention | S6 Campaign production gate |
 | 3 | Datafordeler (EJF + **DAGI**) + MitID-broker | Fase 1–2 |
 | 4 | **ADR-013** + branch protection + manglende CI-gates | Alt |
 
-**Fase 1 og 2 kan bygges nu.** De er zone A og verificeret ordrebog — uændret af v5.1 bortset fra MitID fra start. Mandat og budbog er der, ambitionen realiseres, og de kræver juristens svar først.
+**S0–S2 kan fortsætte inden for deres data- og licensgrænser.** S3 kan udvikles mod syntetiske/testdata, men rigtige persondata kræver LG-2. S4–S6 må ikke aktiveres i produktion før deres gates er lukket. Se projektgrundlag v5.2 §9–10.

@@ -3,14 +3,27 @@
 ## A1 · Datamodel (zone B, RLS)
 
 ```sql
-CREATE TABLE buyer_marketing_consent (
+-- Immutable history: each grant/revoke/regrant is a new event.
+CREATE TABLE buyer_marketing_consent_event (
+  consent_event_id uuid PRIMARY KEY,
   buyer_identity  uuid NOT NULL,
-  purpose         text NOT NULL DEFAULT 'MATCHED_OPPORTUNITIES',
-  scope           jsonb NOT NULL,          -- {area_ids[], types[], budget_band}
+  purpose         text NOT NULL,
+  scope           jsonb NOT NULL,
   text_version    text NOT NULL,
-  legal_basis_ref text NOT NULL,           -- juristens dokument-id
-  granted_at      timestamptz NOT NULL,
-  revoked_at      timestamptz,
+  legal_basis_ref text NOT NULL,
+  event_type      text NOT NULL, -- GRANTED | REVOKED | SUPERSEDED
+  occurred_at     timestamptz NOT NULL,
+  actor_ref       text NOT NULL,
+  source_ref      text NOT NULL,
+  supersedes_event_id uuid
+);
+-- Current state is a rebuildable projection, never the source of truth.
+CREATE TABLE buyer_marketing_consent_current (
+  buyer_identity uuid NOT NULL,
+  purpose        text NOT NULL,
+  active_event_id uuid NOT NULL,
+  is_active      boolean NOT NULL,
+  updated_at     timestamptz NOT NULL,
   PRIMARY KEY (buyer_identity, purpose)
 );
 
@@ -74,14 +87,19 @@ def deliver(campaign):
     require(listing_active_and_licensed(campaign.listing_id))
     require(owns_listing(campaign.agent_org_id, campaign.listing_id))
 
-    for buyer in audience(campaign.audience_query):      # k>=5 pr. celle
-        if not consent_active(buyer, 'MATCHED_OPPORTUNITIES'): continue
+    eligible = apply_consent_mute_suppression_frequency_quiet_hours(audience(campaign.audience_query))
+    eligible = apply_relevance_filter(eligible, campaign.relevance_min)
+    require(final_audience_size(eligible) >= 25)
+    require(k_anonymity_and_suppression(eligible))
+
+    for buyer in eligible:
+        if not consent_active_at_send_time(buyer, 'MATCHED_OPPORTUNITIES'): continue
         if muted(buyer, campaign.agent_org_id):               continue
         if suppressed(buyer):                                 continue
         if not within_cap(buyer, weekly=1, monthly=3):        continue
         if not quiet_hours_ok():                              queue(); continue
         score = relevance(buyer.order, campaign.listing)
-        if score < campaign.relevance_min:                    continue   # ingen kvote trukket
+        if score < campaign.relevance_min:                    continue   # sidste kontrol; ingen kvote trukket
         inbox.deliver(buyer, render(campaign, score))         # struktureret + scannet tekst
         emit('campaign.delivered', score=score)
     reputation.recompute(campaign.agent_org_id)
@@ -150,3 +168,13 @@ GIVEN relevance 35 % hos mægler   THEN quota_multiplier 0,5 + under_review
 GIVEN opt_out efter kampagne >3 % THEN P2-alarm, kampagner pauses globalt
 GIVEN mægler ser audience         THEN kun antal, aldrig pseudonymer
 ```
+
+
+## A8 · Normative præciseringer (v5.2)
+
+1. Consent history is append-only. A single mutable row with a primary key on buyer+purpose is not an adequate audit history for revoke/regrant.
+2. The audience floor and k-anonymity are evaluated on the final eligible audience after consent, mute, suppression, frequency, quiet-hour and relevance filters.
+3. Recheck consent and every delivery guard at actual send time; approval/estimation does not reserve consent.
+4. Advertisers receive aggregate counts only. No buyer ids, pseudonyms or recipient-level exports.
+5. k≥5 is a technical floor, not a legal conclusion that profiling/marketing is permitted. L43–L48 remain production blockers.
+6. This document is subordinate to project baseline v5.2 and architecture v2.1.
