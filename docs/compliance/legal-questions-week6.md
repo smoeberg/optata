@@ -117,3 +117,11 @@ Dato / initialer: ____________________
 **Svarskabelon:** udfyld `Svar / Handlingsregel / Hjemmel / Konsekvens for kode / Blokerer deploy / Dato+initialer` som i `legal-questions-week6.md`.
 
 Se også `docs/compliance/pilot-feed-aftale.md` (licensvilkårene, bilag A2) og `docs/design/Optata - Udbudsmatch M3 v1.md`.
+
+---
+
+# Videre spørgsmål
+
+L32–L37 (udbudsmatch) er i dette dokument ovenfor. L38–L48
+(mandat, budbog og kampagner) er flyttet til deres eget bilag:
+`docs/compliance/legal-questions-mandate-and-campaigns.md`.
