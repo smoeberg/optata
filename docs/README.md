@@ -31,5 +31,5 @@
 - Architecture Contracts v1.0 er et foreslået teknisk kontraktsæt og er ikke en implementerings- eller sikkerhedsgodkendelse.
 - Produkt- og servicearkitekturdokumenter er arbejdsgrundlag, indtil beslutninger er eksplicit godkendt og indarbejdet i v5.2 og relevante ADR'er.
 
-## Ændringsregel
+## Agentkoordinering\n- `coordination/README.md` — obligatorisk startpunkt for AI-agenter, fælles status, ejerskab, afhængigheder og sync-protokol.\n- `coordination/AGENT-PROTOCOL.md` — arbejdsgange, sync-checkpoints, PR-krav og handoff.\n- `coordination/PROJECT-STATE.md` — dateret snapshot; skal altid verificeres mod GitHub.\n\n## Ændringsregel
 Alle ændringer i produktbeslutninger skal opdatere v5.2 og relevante ADR'er. Alle ændringer i systemadfærd skal også opdatere arkitektur, kontrakter, backlog og tests.
