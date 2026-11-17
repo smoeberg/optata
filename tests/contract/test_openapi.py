@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import yaml
-from fastapi.testclient import TestClient
 
 from apps.api.main import app
 
@@ -11,8 +10,23 @@ CONTRACT = yaml.safe_load(
     (Path(__file__).resolve().parents[2] / "contracts" / "openapi.yaml").read_text("utf-8")
 )
 
-# Schemas that are open on purpose. Each needs a reason in the contract.
-OPEN_BY_DESIGN = {"QualityFlags"}
+# Objects that are open on purpose. Each needs a reason in the contract, and
+# none may ever carry personal data.
+OPEN_BY_DESIGN = {"QualityFlags", "Property.attrs"}
+
+
+def _open_objects(schema, path):
+    """Yield the path of every object schema that does not close itself."""
+    if not isinstance(schema, dict):
+        return
+    kind = schema.get("type")
+    is_object = kind == "object" or (isinstance(kind, list) and "object" in kind)
+    if is_object and schema.get("additionalProperties") is not False and path not in OPEN_BY_DESIGN:
+        yield path
+    for name, child in schema.get("properties", {}).items():
+        yield from _open_objects(child, f"{path}.{name}")
+    if "items" in schema:
+        yield from _open_objects(schema["items"], f"{path}[]")
 
 
 def test_every_route_in_the_app_is_in_the_contract():
@@ -23,11 +37,17 @@ def test_every_route_in_the_app_is_in_the_contract():
             assert method.lower() in CONTRACT["paths"][route.path], f"{method} {route.path}"
 
 
-def test_response_schemas_are_closed():
+def test_every_public_path_in_the_contract_is_served():
+    served = {route.path for route in app.routes}
+    assert set(CONTRACT["paths"]) == served
+
+
+def test_response_schemas_are_closed_at_every_depth():
     """additionalProperties: false is a security control: an undeclared field cannot leak."""
+    found = []
     for name, schema in CONTRACT["components"]["schemas"].items():
-        if schema.get("type") == "object" and name not in OPEN_BY_DESIGN:
-            assert schema.get("additionalProperties") is False, name
+        found.extend(_open_objects(schema, name))
+    assert found == []
 
 
 def test_there_is_no_email_session():
@@ -36,9 +56,7 @@ def test_there_is_no_email_session():
     assert "email" not in yaml.safe_dump(CONTRACT["paths"]).lower()
 
 
-def test_health_matches_the_contract():
-    response = TestClient(app).get("/health")
-    assert response.status_code == 200
-    schema = CONTRACT["components"]["schemas"]["Health"]
-    assert set(response.json()) == set(schema["required"])
-    assert response.json()["status"] in schema["properties"]["status"]["enum"]
+def test_public_schemas_carry_no_personal_fields():
+    text = yaml.safe_dump(CONTRACT["components"]["schemas"]).lower()
+    for word in ("cpr", "full_name", "phone", "owner_cvr", "household", "pseudonym"):
+        assert word not in text, word

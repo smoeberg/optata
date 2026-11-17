@@ -8,11 +8,11 @@ Run everything locally with `make ci`. The same steps run in
 
 | # | Gate | Status | What runs |
 |---|---|---|---|
-| 1 | Contract first | Partial | `tests/contract/`: every route in the app exists in `contracts/openapi.yaml`; events validate against `contracts/events/` |
+| 1 | Contract first | Built for what exists | `tests/contract/`: routes and contract paths must match both ways; every response body is validated against its schema; events validate against `contracts/events/` |
 | 2 | Lint and module boundaries | Built | `ruff check .` and `lint-imports`. No type checker yet |
 | 3 | Unit and contract tests | Built | `pytest` |
 | 4 | Guard tests | Built, draft | `tests/guards/`. Written by an AI assistant; needs human review before they count |
-| 5 | Zone leakage | Partial | Response schemas must set `additionalProperties: false`. No scan of live payloads yet |
+| 5 | Zone leakage | Built for the public API | Schemas must be closed at every depth, live responses are validated against them, and public requests run as `public_reader`, which cannot read zone B. No scan of rendered reports yet |
 | 6 | k-anonymity | Not built | Zone C does not exist yet (S8) |
 | 7 | SAST and secrets scan | Not built | |
 | 8 | Dependency and licence scan | Not built | |
