@@ -46,6 +46,7 @@ Ingen backlog eller designfil kan tilsidesætte en invariant eller et juridisk r
 | P-08 | Mægler får kun scoped deltagelse | Ingen eksport af ordrebog, køberidentitet eller bud uden for udtrykkelig lovlig proces |
 | P-09 | Campaign er et separat distributionsmodul | Kræver eget aktivt licenseret udbud, gyldigt samtykke og målretnings-/frekvensguards |
 | P-10 | Modulær monolit er første implementeringsform | Ingen mikroserviceopdeling før målbar driftsmæssig begrundelse |
+| P-11 | Optata, advokatselskabet og serviceselskabet er tre selvstændige juridiske selskaber | Egne aftaler, leverancer, beslutninger, fakturering, ansvar og adgangsgrænser; konkret juridisk/regulatorisk vurdering er fortsat påkrævet |
 
 ## 3. Produktets aktører og ansvar
 
@@ -53,10 +54,19 @@ Ingen backlog eller designfil kan tilsidesætte en invariant eller et juridisk r
 |---|---|---|
 | Køber | Oprette/vedligeholde ordre, dokumentere købeevne, se relevante udbud, afgive/tilbagetrække bud | Se andre køberes identitet eller kontakte sælger uden for processen |
 | Sælger/ejer | Verificere ejerskab, læse aggregeret interesse, oprette/tilbagekalde mandat, vælge udfører, behandle bud | Give mandat på vegne af medejere uden gyldig fuldmagt |
-| Optata | Drive platform, adgangskontrol, matching, mandat- og budworkflow, audit, rapportering | Udføre lovreguleret ejendomsformidling uden nødvendig tilladelse/partnerstruktur |
-| Mægler/udfører | Udføre tildelte opgaver inden for aktiv participation license og mandat-scope | Se andre mandater, eksportere ordrebog eller overtage relationen uden hjemmel |
-| Advokat-/closingpartner | Udføre aftalt juridisk/berigtigelsesopgave med dataminimeret sagsadgang | Få adgang til irrelevante køber-/platformsdata |
+| Optata-platformsselskabet | Drive platform, adgangskontrol, matching, mandat- og budworkflow, audit, rapportering og egne softwareprodukter | Udføre lovreguleret ejendomsformidling uden nødvendig tilladelse/partnerstruktur; automatisk optræde som advokat eller serviceleverandør |
+| Advokatselskabet | Indgå eget klientforhold, udføre særskilt engageret juridisk rådgivning og juridiske/berigtigelsesopgaver | Få automatisk klientforhold eller adgang til Optatas/Serviceselskabets data; levere ikke-juridiske services på Serviceselskabets vegne uden særskilt aftale og juridisk afklaring |
+| Serviceselskabet | Indgå egne serviceaftaler og levere/koordinere ikke-juridiske ydelser inden for godkendt forretningsområde | Yde juridisk rådgivning, optræde som advokat eller disponere over advokatselskabets klientforhold/journal |
+| Mægler/øvrig leverandør | Udføre tildelte opgaver inden for egen aftale, autorisation/licens og konkret scope | Se andre mandater, eksportere ordrebog eller overtage relationen uden hjemmel |
 | B2B-kunde | Købe licenserede analyser og aggregerede indsigter | Re-identificere, sammenkøre eller eksportere beskyttede data |
+
+### 3.1 Fast selskabs- og ansvarsgrænse
+
+Optata-platformsselskabet, advokatselskabet og serviceselskabet er tre selvstændige juridiske selskaber. Dette er en fastlagt stifterbeslutning og ikke en åben produktmulighed. Hvert selskab indgår egne aftaler, træffer egne beslutninger, fakturerer egne ydelser og bærer ansvaret for egne leverancer. Et login, mandat eller kundeforhold hos ét selskab opretter ikke automatisk et aftale-, klient- eller repræsentationsforhold hos et andet.
+
+Advokatselskabet ejer klientaccept, konfliktkontrol, juridisk rådgivning, egen journal og professionelt ansvar. Serviceselskabet ejer egne ikke-juridiske serviceaftaler og leverancer, herunder klargøring, rengøring, styling, fotografering, fremvisning og praktisk koordinering. Optata ejer softwareplatformen og egne platformprodukter. Eksterne leverandører kan indgå særskilte aftaler med Serviceselskabet eller kunden; den konkrete kontraktpart skal altid fremgå.
+
+Selskabsadskillelsen fastlægger ikke i sig selv dataansvarsroller, lovligheden af henvisninger, fælles markedsføring, fælles ejerskab/ledelse, delte IT-systemer eller betalingsflows. Disse forhold kræver konkret juridisk og databeskyttelsesretlig vurdering. Data må kun deles efter dokumenteret formål, behandlingsgrundlag, modtagerrolle og mindst mulige scope.
 
 ## 4. Markedsmodellen
 
@@ -180,9 +190,9 @@ En opgave er **Done**, når:
 1. Juridisk rollefordeling i struktur C og om egen tilladelse bliver nødvendig.
 2. Mandatets præcise retlige karakter, parter, fuldmagt, sameje og andelsboliger.
 3. Buds juridiske status, accept, tilbagekaldelse, frister og aftaleindgåelse.
-4. Hvilken partner udfører DIRECT-vejens juridiske/berigtigelsesarbejde.
+4. Hvilket advokatselskab eller hvilken anden kvalificeret juridisk leverandør kunden kan engagere til DIRECT-vejens juridiske/berigtigelsesarbejde.
 5. Pris-/indtægtsmodel og enhedsøkonomi efter ny produktstruktur.
-6. Lovligt samtykkegrundlag og dataansvar for Campaign.
+6. Dataansvarsroller, behandlingsgrundlag og lovlig datadeling mellem de tre selskaber og øvrige partnere, herunder Campaign.
 7. Licenser til Datafordeler/EJF, DAGI, medier og feeds.
 8. Geografisk definition af kvarter og gade samt dens versionering.
 9. Hosting, observability, branch protection og uafhængig reviewkapacitet.
@@ -193,4 +203,5 @@ En opgave er **Done**, når:
 
 - **v5.2:** Struktur C fastlagt som produktmål; SaleMandate, OfferLedger og Campaign indarbejdet; M3 som lead-/invitationkanal og gamle e-mail-/brevflows markeret som forældede; juridiske gates, faseplan og governance samlet.
 - **v5.2-addendum (Proposed):** RelocationCase som koordinerende flytteforløb; salg og køb forbliver separate domænespor.
+- **v5.2 company-boundary update:** Optata, advokatselskabet og serviceselskabet fastlagt som tre selvstændige juridiske selskaber; konkrete regulatoriske/dataretlige forhold forbliver åbne gates.
 - **v5.1:** Historisk baseline fra 16. november 2026. Se `docs/historik/` eller git-historikken.

@@ -14,8 +14,8 @@
 - `product/PRODUCT-CLOSURE-AND-DEVELOPMENT-READINESS-v1.0.md` — samlet audit af handelsrejsen, AI-agentinput, mangler, 20 %-mål og beslutninger før konceptlås. Status: audit/anbefaling, ikke godkendt baseline.
 
 ## Handelsmodel og service blueprint
-- `product/TRANSACTION-MODEL-AND-SERVICE-BLUEPRINT-v0.1.md` — stifterretning for Optatas juridiske/platformsmæssige grænse, advokatselskab, DIRECT, komplette køber-/sælgerrejser, dødsbo, budmekanik, fulfillment og abonnementsmodel. Dokumentets interne versionsangivelse er v0.2; filnavnet er bevaret for historisk stabilitet. Arbejdsgrundlag; ikke juridisk godkendt eller gældende baseline.
-- `product/SERVICE-AND-RESPONSIBILITY-ARCHITECTURE-v1.0.md` — foreslået ansvars-/RACI-model, selskabs- og leverandørgrænser, DIRECT-service blueprint, køber-/sælgerrejser, FulfillmentCase, data-/betalingsgrænser, release gates og acceptance criteria. Proposed; ikke juridisk godkendt eller gældende baseline.
+- `product/TRANSACTION-MODEL-AND-SERVICE-BLUEPRINT-v0.1.md` — stifterretning for Optatas platformrolle, det selvstændige advokatselskab, det selvstændige Serviceselskab, DIRECT, køber-/sælgerrejser, dødsbo, budmekanik, fulfillment og abonnementsmodel. Dokumentets interne versionsangivelse er v0.2; filnavnet er bevaret for historisk stabilitet. Arbejdsgrundlag; ikke juridisk godkendt.
+- `product/SERVICE-AND-RESPONSIBILITY-ARCHITECTURE-v1.0.md` — foreslået ansvars-/RACI-model, DIRECT-service blueprint, køber-/sælgerrejser, FulfillmentCase, data-/betalingsgrænser, release gates og acceptance criteria. Selskabsadskillelsen mellem Optata, advokatselskabet og Serviceselskabet er fastlagt af stifter og indarbejdet i v5.2; øvrige driftsvalg er Proposed og dokumentet er ikke juridisk godkendt.
 
 ## Supplerende specifikationer
 - `design/` — UI, produktdesign, listings, Campaign og markedsambition.
@@ -32,4 +32,8 @@
 - Produkt- og servicearkitekturdokumenter er arbejdsgrundlag, indtil beslutninger er eksplicit godkendt og indarbejdet i v5.2 og relevante ADR'er.
 
 ## Agentkoordinering\n- `coordination/README.md` — obligatorisk startpunkt for AI-agenter, fælles status, ejerskab, afhængigheder og sync-protokol.\n- `coordination/AGENT-PROTOCOL.md` — arbejdsgange, sync-checkpoints, PR-krav og handoff.\n- `coordination/PROJECT-STATE.md` — dateret snapshot; skal altid verificeres mod GitHub.\n\n## Ændringsregel
+## Fast selskabsforudsætning
+Optata-platformsselskabet, advokatselskabet og Serviceselskabet er tre selvstændige juridiske selskaber. Selskabsadskillelsen er en fastlagt stifterbeslutning. Det betyder ikke, at fælles ejerskab/ledelse, dataansvar, henvisninger, markedsføring, delte IT-systemer eller betalinger dermed er juridisk afklaret.
+
+## Ændringsregel
 Alle ændringer i produktbeslutninger skal opdatere v5.2 og relevante ADR'er. Alle ændringer i systemadfærd skal også opdatere arkitektur, kontrakter, backlog og tests.

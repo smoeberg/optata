@@ -3,17 +3,17 @@
 **Version:** 0.2 · **Dato:** 17. november 2026  
 **Status:** Stifterinput indarbejdet · arbejdsgrundlag til produktdesign · ikke juridisk godkendt
 
-> Dokumentet omsætter stifterens seneste beslutningsretning til en samlet produkt- og servicearkitektur. Det er ikke en ændring af den normative v5.2-baseline, før beslutningerne er godkendt og indarbejdet dér. Juridisk selskabsstruktur, formidlerstatus, advokatetik, databeskyttelse og forbrugerret skal vurderes skriftligt af uafhængig rådgiver.
+> Dokumentet omsætter stifterens seneste beslutningsretning til en samlet produkt- og servicearkitektur. Selskabsadskillelsen mellem Optata, advokatselskabet og serviceselskabet er fastlagt af stifteren og indarbejdet i v5.2. Den faktiske regulatoriske rolle, advokatetik, databeskyttelse, forbrugerret og de konkrete samarbejds-/betalingsforhold skal fortsat vurderes skriftligt af uafhængig rådgiver.
 
 ## 1. Stifterens styrende retning
 
 Følgende er styrende produktretning for den videre specifikation:
 
 1. **Optata-platformen skal ikke være juridisk part i bolighandlen.** Optata leverer den digitale platform, markedsplads, matching, køber-/sælgerrejser, mandat- og budworkflow, status, dokumenteret samtykke og abonnementstjenester. Platformen skal ikke udarbejde eller indgå købsaftalen, berigtige handlen, modtage købesummen eller optræde som kundens juridiske rådgiver.
-2. **Et selvstændigt advokatselskab håndterer de juridiske ydelser.** Kunden får kontakt til advokatselskabet gennem Optata, men advokatselskabet skal have sit eget klientforhold, engagement, rådgivningsansvar, sagsstyring, journal, honorar og forsikring. Selskabets juridiske uafhængighed og relation til platformen skal være reel og dokumenteret.
-3. **DIRECT skal kunne fungere uden traditionel ejendomsmægler.** Sælgeren skal kunne få boligen salgsklar, præsenteret, besigtiget og fremvist via særskilte serviceydelser. Salgsklargøring kan bestilles hos advokatselskabet/serviceselskabet eller dets eksterne leverandører, men skal være en særskilt, frivillig ydelse med tydelig leverandør og pris.
+2. **Et selvstændigt advokatselskab håndterer alene de juridiske ydelser, det særskilt påtager sig.** Kunden får mulighed for at anmode om kontakt, men advokatselskabet skal selv gennemføre klient- og konfliktkontrol og indgå eget engagement. Det ejer rådgivningsansvar, sagsstyring, journal, honorar og forsikring.
+3. **DIRECT skal kunne fungere uden traditionel ejendomsmægler.** Sælgeren skal kunne få boligen salgsklar, præsenteret, besigtiget og fremvist via særskilte serviceydelser. Ikke-juridisk salgsklargøring bestilles hos Serviceselskabet eller en navngiven ekstern leverandør – aldrig som en uklar ydelse fra advokatselskabet.
 4. **Optata skal tjene penge på platformen frem til og uafhængigt af den afsluttede handel.** Den primære retning er abonnementsforretning. Der kan desuden være B2B-abonnementer eller særskilt betalt B2B-adgang til samtykkebaserede købermuligheder. Platformens indtægt må ikke utilsigtet blive en skjult success fee for juridisk formidling.
-5. **Serviceselskabet kan tilbyde ekstra ydelser.** Eksempelvis juridisk rådgivning, berigtigelse, dokumentindhentning, koordinering, salgsklargøring og adgang til eksterne boligservices. Kunden skal kunne vælge og fravælge hver ydelse.
+5. **Serviceselskabet kan tilbyde ekstra ikke-juridiske ydelser.** Eksempelvis dokumentindsamling af praktisk karakter, koordinering, salgsklargøring, rengøring, styling, fotografering, fremvisning og adgang til eksterne boligservices. Juridisk rådgivning, juridisk dokumentudarbejdelse og berigtigelse hører alene under advokatselskabet eller en anden særskilt engageret juridisk leverandør.
 6. **Markedsopstart og endelig prissætning fastlægges senere.** Nu skal vi definere abonnementslogik, betalingspunkter, datagrænser og produktmæssige muligheder – ikke fastlåse beløb eller pilotområde.
 
 ### Vigtig juridisk præcisering
@@ -43,27 +43,29 @@ Optata skal ikke:
 - Give indtryk af, at en platformstatus i sig selv er juridisk rådgivning eller bindende aftale.
 - Overtage advokatens, bankens, mæglers eller øvrige fagpersoners professionelle ansvar.
 
-### 2.2 Selvstændigt advokatselskab/serviceselskab
+### 2.2 Selvstændigt advokatselskab
 
-Advokatselskabet indgår særskilt aftale direkte med kunden om de ydelser, kunden vælger. Det kan efter særskilt juridisk og operationel afklaring levere:
+Advokatselskabet er en separat juridisk enhed fra både Optata og Serviceselskabet. Det indgår særskilt aftale direkte med klienten og kan – inden for gældende regler og det konkrete engagement – levere:
 - Juridisk køber- eller sælgerrådgivning.
 - Gennemgang og udarbejdelse af købsaftale og bilag.
-- Håndtering af finansierings-, rådgiver- og øvrige forbehold.
-- Skøde, tinglysning, refusionsopgørelse og berigtigelse.
-- Dialog med bank, realkredit, administrator, forening og øvrige parter.
-- Dokument- og proceskoordinering.
-- Tilbudte salgsklargøringspakker og bestilling af eksterne leverandører, hvis dette er foreneligt med selskabets regler og juridiske struktur.
+- Juridisk håndtering af finansierings-, rådgiver- og øvrige forbehold.
+- Skøde, tinglysning, refusionsopgørelse og berigtigelse, hvis opgaven påtages.
+- Juridisk dialog med bank, realkredit, administrator, forening og øvrige parter.
 
 Advokatselskabet skal selvstændigt fastlægge:
 - Om det påtager sig sagen og hvem der er ansvarlig advokat.
 - Klientidentifikation, interessekonfliktkontrol og engagement letter.
 - Rådgivningsomfang, honorar, forsikring og klagevej.
 - Hvilke dokumenter og oplysninger der modtages fra Optata, på hvilket grundlag og med hvilket samtykke.
-- Hvilke opgaver der udføres af advokater, ansatte eller eksterne leverandører.
+- Hvilke opgaver der udføres af advokater, ansatte eller eksterne juridiske leverandører.
+
+Advokatselskabet leverer ikke automatisk rengøring, styling, fotografering, fremvisning eller andre ikke-juridiske ydelser. Sådanne opgaver bestilles særskilt hos Serviceselskabet eller en navngiven ekstern leverandør med egen aftale og ansvarsplacering.
 
 Platformen må ikke fremstille advokatselskabet som en automatisk del af Optata-kontoen eller som en juridisk funktion, der allerede er engageret. Kunden skal aktivt vælge at kontakte/engagere selskabet.
 
-### 2.3 Øvrige partnere
+### 2.3 Serviceselskabet og øvrige partnere
+
+Serviceselskabet er en selvstændig juridisk enhed, der indgår egne serviceaftaler og fakturerer egne ikke-juridiske ydelser. Det kan levere eller koordinere praktisk klargøring, rengøring, styling, fotografering, plantegning, fremvisning og praktisk proceskoordinering. Det må ikke optræde som advokat eller levere juridisk rådgivning. Serviceselskabet kan engagere eksterne leverandører på egne aftalevilkår; den faktiske leverandør og kontraktpart skal fremgå for kunden.
 
 | Partner | Typiske leverancer | Ansvar og grænse |
 |---|---|---|
@@ -75,7 +77,8 @@ Platformen må ikke fremstille advokatselskabet som en automatisk del af Optata-
 | Rengøring/styling/håndværker | Klargøring | Tilbud, udførelse, kvalitet, skade og reklamation |
 | Bank/realkredit | Finansiering og kreditafgørelse | Egen kreditvurdering og finansieringsansvar |
 | Ejendomsmægler | Valgfri AGENT_EXECUTED-vej | Eget mægleransvar og særskilt mandat/engagement |
-| Advokatselskab | Juridiske ydelser og evt. koordination | Eget klientforhold og professionelt ansvar |
+| Serviceselskab | Ikke-juridiske serviceordrer og leverandørkoordination | Egen serviceaftale, egen fakturering, kvalitet, reklamation og ansvar |
+| Advokatselskab | Juridiske ydelser og juridisk berigtigelse efter engagement | Eget klientforhold, egen journal, honorar og professionelt ansvar |
 
 Partnerne er ikke automatisk Optata-agenter. Hver bestilling skal vise leverandør, opgave, pris, datadeling, afbestilling, ansvar og reklamationsvej.
 
@@ -186,7 +189,7 @@ Dette er en produktrejse, ikke en juridisk konklusion om, hvornår en aftale ind
 12. Ved sameje kræves godkendelse fra alle nødvendige parter eller en gyldig, dokumenteret fuldmagt.
 13. Ved accepteret bud oprettes et completion-forløb. Det juridiske engagement er fortsat særskilt.
 14. Sælger følger dokumenter, forbehold, indfrielse, overtagelse og aflevering via platformens statusvisning.
-15. Sælger kan se, hvilke opgaver der tilhører advokatselskabet, bank, partner eller sælger selv.
+15. Sælger kan se, hvilke opgaver der tilhører Serviceselskabet, advokatselskabet, bank, ekstern partner eller sælger selv.
 
 ### 5.3 Sælgerens særlige scenarier
 
@@ -340,24 +343,25 @@ Primær retning:
 
 Køberens identitet, økonomi, bud og dokumenter må ikke følge med et B2B-abonnement som standard. Samtykke skal være specifikt, informeret, frivilligt, modtager- og formålsafgrænset og kunne trækkes tilbage fremadrettet.
 
-### 9.3 Serviceselskabets indtægter
+### 9.3 Selskabernes indtægter og betalinger
 
-Advokatselskabet/serviceselskabet kan have separate indtægter fra:
-- Juridisk rådgivning og berigtigelse.
-- Dokument- og sagsbehandling.
-- Salgsklargøring og koordinering af leverandører.
-- Fremvisnings- og boligservices, hvis selskabs- og professionsregler tillader det.
-- Andre særskilt bestilte ydelser.
+- **Optata:** egne software-/platformsabonnementer og godkendte B2B-platformsprodukter.
+- **Advokatselskabet:** juridisk rådgivning, juridisk dokumentarbejde og berigtigelse under egne klientaftaler.
+- **Serviceselskabet:** ikke-juridiske serviceordrer og egne leverandøraftaler.
+- **Eksterne leverandører:** egne ydelser, hvis kunden kontraherer direkte med dem.
 
-Platform og advokatselskab skal have separate aftaler, fakturaer, regnskaber, ansvarsforhold og dataadgang. Eventuelle henvisnings-/koncernbetalinger skal være gennemsigtige og juridisk vurderede.
+Hvert selskab har egne aftaler, fakturaer, regnskaber, betalingsmodtageroplysninger, reklamationsveje og adgangsrettigheder. Ingen fælles faktura eller betaling må skjule, hvem der er kontraktpart. Henvisnings-/koncernbetalinger, fælles markedsføring, delte systemer og fælles ejerskab/ledelse skal vurderes konkret juridisk og databeskyttelsesretligt.
 
 ### 9.4 Hvad skal besluttes nu – og hvad kan vente?
+
+**Fastlagt selskabsforudsætning:** Optata, advokatselskabet og Serviceselskabet er tre selvstændige juridiske selskaber. Dette genåbnes ikke som produktbeslutning; den konkrete lovlighed af aktiviteter, samarbejder og fælles forhold skal fortsat vurderes.
 
 **Skal besluttes nu:**
 - Abonnement er platformens primære indtægtsretning.
 - Platformens betaling er ikke betinget af, at en bestemt handel gennemføres.
 - B2B-adgang må ikke indebære automatisk salg/eksport af køberidentitet eller fortrolige oplysninger.
-- Advokatselskabets ydelser bestilles og faktureres særskilt.
+- Advokatselskabets juridiske ydelser bestilles og faktureres særskilt under eget klientengagement.
+- Serviceselskabets ikke-juridiske ydelser bestilles og faktureres særskilt under egen serviceaftale.
 - Ingen købesum eller klientmidler går gennem Optata.
 
 **Kan vente:**
@@ -381,7 +385,7 @@ Ingen rolle giver automatisk global adgang. Adgang kræver konkret sag, formål,
 
 | Prioritet | Leverance | Hvad skal være på plads |
 |---|---|---|
-| P1 | Handelsmodel og selskabs-/ansvarsgrænse | Optata-platform, advokatselskab og øvrige partnere; juridisk vurdering af faktisk aktivitet |
+| P1 | Handelsmodel og selskabs-/ansvarsgrænse | Optata-platform, advokatselskab, Serviceselskab og øvrige partnere; juridisk vurdering af faktisk aktivitet og samarbejdsmodel |
 | P2 | DIRECT | Salgsklargøring, boligpræsentation, dokumenter, fremvisning, Q&A, servicebestilling |
 | P3 | Fulfillment | Fra platformaccept til købsaftale, skøde, tinglysning, betaling og overtagelse |
 | P4 | Komplette køber-/sælgerrejser | Sameje, medkøber, andel, fuldmagt, finansieringsforbehold, aflysning, fortrydelse, dødsbo |
@@ -402,9 +406,9 @@ Ingen rolle giver automatisk global adgang. Adgang kræver konkret sag, formål,
 | ID | Punkt | Status |
 |---|---|---|
 | B-01 | Optata skal være platform og ikke part i købsaftalen eller juridisk rådgiver | Stifterretning; juridisk vurdering af faktisk rolle mangler |
-| B-02 | Selvstændigt advokatselskab håndterer de juridiske ydelser via særskilt klientforhold | Stifterretning; selskabs-/professionsretlig vurdering mangler |
+| B-02 | Advokatselskabet er en selvstændig juridisk enhed og håndterer egne juridiske engagementer | Selskabsadskillelsen fastlagt af stifter; faktisk professionel uafhængighed og regulatoriske forhold kræver review |
 | B-03 | DIRECT skal tilbyde salg uden traditionel mægler med valgfri klargøring og fremvisning | Produktretning |
-| B-04 | Salgsklargøring kan bestilles gennem advokatselskab/serviceselskab eller dets leverandører | Afhænger af selskabs-/professionsretlig vurdering |
+| B-04 | Ikke-juridisk salgsklargøring bestilles gennem Serviceselskabet eller en navngiven ekstern leverandør | Selskabsadskillelsen fastlagt; konkret leverancemodel og regulatoriske forhold kræver review |
 | B-05 | Platformens primære forretning er abonnement; betaling ikke betinget af afsluttet handel | Stifterretning |
 | B-06 | B2B kan købe adgang til samtykkebaserede købermuligheder | Produktretning; præcis data-/kontaktmodel kræver privacy/juridisk review |
 | B-07 | Sælger kan angive fortrolig minimumspris | Produktretning |
@@ -425,4 +429,4 @@ Ingen rolle giver automatisk global adgang. Adgang kræver konkret sag, formål,
 6. Opret et samlet scenariekatalog for sameje, andel, fuldmagt, dødsbo, finansiering, aflysning og fortrydelse.
 7. Opdatér først derefter v5.2, ADR'er, architecture contracts og S3–S7 backlogs.
 
-**Konceptets mål:** Kunden skal opleve én enkel digital rejse. Optata koordinerer platformens proces; advokatselskabet og de øvrige leverandører leverer deres egne, tydeligt afgrænsede ydelser og bærer deres respektive faglige ansvar.
+**Konceptets mål:** Kunden skal opleve én enkel digital rejse. Optata leverer platformen; Serviceselskabet leverer eller koordinerer særskilt bestilte ikke-juridiske ydelser; advokatselskabet leverer juridiske ydelser under eget klientengagement; øvrige leverandører bærer ansvaret for egne aftalte leverancer.
