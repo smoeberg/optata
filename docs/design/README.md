@@ -11,7 +11,8 @@ Designleverancerne fra designfasen, lagt ind uændrede. Læs i denne rækkefølg
 7. `Optata - Markedsambition - SaleMandate og OfferLedger v1.md` — ambitionskorrektion: M3 som lead-kanal forkastes; SaleMandate, OfferLedger og mægleren som udfører
 8. `Optata - Efterspoergselsgravitation - struktur C v1.md` — retningen låst: struktur C, `sale_mandate` + `offer`-modellerne, invarianter 14–17, L38–L42 og fasesekvensen
 9. `Optata - Maalrettet raekkevidde - Campaign v1.md` — mægleren betaler for rækkevidde: `campaign`-modellen, invarianter 18–20, L43–L48 og kill-kriterier
+10. `Optata - Campaign-modul - fuld spec v1.md` — kampagne-modulet som fuld spec: datamodel, tilstandsmaskine, leverings-pipeline, API, samtykketekst og guards
 
-Punkt 8 låser strukturen: ARCHITECTURE.md er opdateret til v2.0 (20 invarianter, modulerne `mandates`, `offers`, `campaigns`), og S4/S5/S6-backloggene bærer rettelses-noter.
+Punkt 8 låser strukturen: ARCHITECTURE.md er erstattet af den autoritative v2.0 (20 invarianter, 14 moduler, markedets to veje), og S4/S5/S6-backloggene bærer rettelses-noter. Jurist-spørgsmålene L38–L48 ligger i `docs/compliance/legal-questions-mandate-and-campaigns.md`.
 
 Sprintbackloggen for S3 ligger i `docs/backlog/S3.md`, og guard-tests til S3 ligger som specifikation i `docs/security/guards-s3.md`. Udbudsmatch (S6) ligger i `docs/backlog/S6.md`.

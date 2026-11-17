@@ -120,33 +120,8 @@ Se også `docs/compliance/pilot-feed-aftale.md` (licensvilkårene, bilag A2) og 
 
 ---
 
-# Tilføjelse — struktur C (mandat + budbog): L38–L42
+# Videre spørgsmål
 
-| # | Spørgsmål | Afgør |
-|---|---|---|
-| **L38** 🔴 | Kan Optata **eje sælgers mandat** og drive budbog, mens en licenseret partner er formel formidler? Hvor går grænsen for, hvad vi selv må gøre? | Hele struktur C |
-| **L39** 🔴 | Er en **struktureret budplatform** med accept/modbud formidling i sig selv — eller markedsinfrastruktur? | OfferLedger-design |
-| **L40** 🔴 | Må vi markedsføre **"sælg uden mægler"** når partneren er formel formidler? Hvilken ordlyd er vildledende? | Hele positioneringen |
-| **L41** | Krav til **mandatvilkår**: eksklusivitet, løbetid, tilbagekaldelse, sameje, andel | SaleMandate |
-| **L42** | Mæglerens **deltagelsesvilkår**: scoped adgang, ingen eksport, tavshedspligt, sanktion | participation_license |
-
-**L38–L40 skal besvares før fase 3 bygges.** Fase 1 (register/analyse) og fase 2 (verificeret ordrebog) kan bygges nu.
-
-Se `docs/design/Optata - Efterspoergselsgravitation - struktur C v1.md`.
-
----
-
-# Tilføjelse — målrettet rækkevidde (kampagner): L43–L48
-
-| # | Spørgsmål | Afgør |
-|---|---|---|
-| **L43** 🔴 | Hvilket **samtykke** kræves for at vise købere markedsføring fra tredjepart (mægler)? Er Optata afsender på mæglerens vegne, eller formidler af indhold? Hvem er dataansvarlig? | Hele produktet |
-| **L44** 🔴 | Er målretning mod **købsintention + budget** profilering der udløser særlige krav? Er audience ≥25 + k≥5 tilstrækkeligt til at undgå individuel målretning? | Targeting-model |
-| **L45** | Er kampagne→forespørgsel→bud **formidling**, eller markedsføring af et udbud? Vi tager intet honorar pr. handel | Positionering |
-| **L46** | Krav til **indhold og attribution**: pris, "solgt"-status, åbent hus, vildledende udsagn | Indholdsregler |
-| **L47** | **P2B / platform-forordningen**: krav til gennemsigtighed i rangering, omdømmescoring og kvotetildeling over for erhvervskunder | Omdømmemodel |
-| **L48** | Retention af **kampagne-interaktion** (åbnet, feedback, mute) — formål og frist | Datamodel |
-
-**L43 og L44 skal besvares før kampagne-modulet bygges.** Resten kan afklares parallelt.
-
-Se `docs/design/Optata - Maalrettet raekkevidde - Campaign v1.md`.
+L32–L37 (udbudsmatch) er i dette dokument ovenfor. L38–L48
+(mandat, budbog og kampagner) er flyttet til deres eget bilag:
+`docs/compliance/legal-questions-mandate-and-campaigns.md`.
