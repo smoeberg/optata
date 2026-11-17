@@ -1,4 +1,6 @@
-> **HISTORISK FORSLAG / SUPERSEDED:** Dokumentstrukturen i dette dokument er erstattet af `docs/README.md`, root `README.md` og projektgrundlag v5.2. Følg ikke den gamle commit-plan som aktuel arbejdsplan.\n\n# Samlet docs-struktur og commit-plan
+> **HISTORISK FORSLAG / SUPERSEDED:** Dokumentstrukturen i dette dokument er erstattet af `docs/README.md`, root `README.md` og projektgrundlag v5.2. Følg ikke den gamle commit-plan som aktuel arbejdsplan.
+
+# Samlet docs-struktur og commit-plan
 
 ```
 docs/
