@@ -87,7 +87,12 @@ def deliver(campaign):
     require(listing_active_and_licensed(campaign.listing_id))
     require(owns_listing(campaign.agent_org_id, campaign.listing_id))
 
-    eligible = apply_consent_mute_suppression_frequency_quiet_hours(audience(campaign.audience_query))\n    eligible = apply_relevance_filter(eligible, campaign.relevance_min)\n    require(final_audience_size(eligible) >= 25)\n    require(k_anonymity_and_suppression(eligible))\n\n    for buyer in eligible:
+    eligible = apply_consent_mute_suppression_frequency_quiet_hours(audience(campaign.audience_query))
+    eligible = apply_relevance_filter(eligible, campaign.relevance_min)
+    require(final_audience_size(eligible) >= 25)
+    require(k_anonymity_and_suppression(eligible))
+
+    for buyer in eligible:
         if not consent_active_at_send_time(buyer, 'MATCHED_OPPORTUNITIES'): continue
         if muted(buyer, campaign.agent_org_id):               continue
         if suppressed(buyer):                                 continue
@@ -163,4 +168,13 @@ GIVEN relevance 35 % hos mægler   THEN quota_multiplier 0,5 + under_review
 GIVEN opt_out efter kampagne >3 % THEN P2-alarm, kampagner pauses globalt
 GIVEN mægler ser audience         THEN kun antal, aldrig pseudonymer
 ```
-\n\n## A8 · Normative præciseringer (v5.2)\n\n1. Consent history is append-only. A single mutable row with a primary key on buyer+purpose is not an adequate audit history for revoke/regrant.\n2. The audience floor and k-anonymity are evaluated on the final eligible audience after consent, mute, suppression, frequency, quiet-hour and relevance filters.\n3. Recheck consent and every delivery guard at actual send time; approval/estimation does not reserve consent.\n4. Advertisers receive aggregate counts only. No buyer ids, pseudonyms or recipient-level exports.\n5. k≥5 is a technical floor, not a legal conclusion that profiling/marketing is permitted. L43–L48 remain production blockers.\n6. This document is subordinate to project baseline v5.2 and architecture v2.1.\n
+
+
+## A8 · Normative præciseringer (v5.2)
+
+1. Consent history is append-only. A single mutable row with a primary key on buyer+purpose is not an adequate audit history for revoke/regrant.
+2. The audience floor and k-anonymity are evaluated on the final eligible audience after consent, mute, suppression, frequency, quiet-hour and relevance filters.
+3. Recheck consent and every delivery guard at actual send time; approval/estimation does not reserve consent.
+4. Advertisers receive aggregate counts only. No buyer ids, pseudonyms or recipient-level exports.
+5. k≥5 is a technical floor, not a legal conclusion that profiling/marketing is permitted. L43–L48 remain production blockers.
+6. This document is subordinate to project baseline v5.2 and architecture v2.1.
