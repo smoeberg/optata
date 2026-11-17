@@ -8,6 +8,8 @@ from typing import Any
 import psycopg
 from psycopg.types.json import Jsonb
 
+from core.orderbook import refresh_density
+
 ALLOWED_ENVIRONMENTS = {"dev", "test"}
 
 
@@ -72,4 +74,5 @@ def load(conn: psycopg.Connection, data: dict[str, list[dict[str, Any]]]) -> dic
               e["envelope"]["causation_id"], e["envelope"]["occurred_at"],
               e["envelope"]["recorded_at"], e["_seed"]) for e in data["order_events"]],
         )
+        refresh_density(conn)
     return {name: len(rows) for name, rows in data.items()}

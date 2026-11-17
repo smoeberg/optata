@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://optata.dk/contracts/events/property.changed.v1.json",
+  "$comment": "Emitted for every new version of a property. Drives the monitoring product, the agent cache and revocation of ownership verification. Zone A: no personal data.",
+  "allOf": [{ "$ref": "_envelope.v1.json" }],
+  "properties": {
+    "type": { "const": "property.changed" },
+    "schema_version": { "const": "1.0.0" },
+    "zone": { "const": "A" },
+    "payload": {
+      "type": "object",
+      "required": ["address_id", "change", "fields", "valid_from", "old_hash", "new_hash"],
+      "additionalProperties": false,
+      "properties": {
+        "address_id": { "type": "string" },
+        "change":     { "enum": ["CREATED", "CHANGED", "CORRECTED"] },
+        "fields":     { "type": "array", "items": { "type": "string" } },
+        "valid_from": { "type": "string" },
+        "old_hash":   { "type": ["string", "null"] },
+        "new_hash":   { "type": "string" }
+      }
+    }
+  }
+}

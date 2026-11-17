@@ -56,5 +56,9 @@ def db_url(dataset):
 def conn(db_url):
     """A superuser connection. Tests switch role with SET LOCAL ROLE; all changes roll back."""
     with psycopg.connect(db_url) as connection:
+        # Open the outer transaction now. Every `conn.transaction()` in a test is
+        # then a savepoint. Without this, a block that is first on the connection
+        # would commit on success, and a failing guard would leak into later tests.
+        connection.execute("SELECT 1")
         yield connection
         connection.rollback()
