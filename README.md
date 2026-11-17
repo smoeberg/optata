@@ -21,7 +21,7 @@ Optata udvikles som en platform, der forbinder ejendomsregisterdata, verificeret
 | [Juridiske spørgsmål L38–L48](docs/compliance/legal-questions-mandate-and-campaigns.md) | Mandat, budbog og Campaign |
 | [CI-gates](docs/ci-gates.md) | Kontroller og implementeringsstatus |
 
-## Dokumentationsregler
+## Agentkoordinering\n\n[Koordinationsprotokol for tre AI-agenter](docs/coordination/README.md) — fælles projektstatus, arbejdsfordeling, afhængigheder, beslutningskø og handoffs.\n\n## Dokumentationsregler
 
 1. v5.2 er produktbaseline; ARCHITECTURE.md er teknisk baseline.
 2. Gamle designoplæg, bilag og sprinttekster er historik, medmindre de er udtrykkeligt refereret af gældende baseline.
