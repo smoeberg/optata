@@ -1,8 +1,7 @@
 # Optata — Service & Responsibility Architecture v1.0
 
 **Version:** 1.0 · **Dato:** 17. november 2026  
-**Status:** Proposed · produkt- og driftsdesign · kræver stifterbeslutninger, juridisk review og arkitekturreview  
-**Arbejdsgren:** `docs/service-responsibility-architecture-v1`  
+**Status:** Proposed · produkt- og driftsdesign · selskabsadskillelse fastlagt af stifter; øvrige produktbeslutninger samt juridisk og arkitekturmæssigt review udestår  
 **Autoritativt udgangspunkt:** Projektgrundlag v5.2, Product Closure v1.0, Transaction Model & Service Blueprint v0.2, Architecture Contracts v1.0 og Role & Authority Model v1.0.
 
 > Dette dokument omsætter den vedtagne produktretning til en operationel ansvars- og servicearkitektur. Det ændrer ikke i sig selv den normative baseline. Det er ikke juridisk rådgivning, en tilladelse til ejendomsformidling eller dokumentation for, at den foreslåede selskabsstruktur er lovlig. Ingen transaktionsfunktion må frigives til rigtige kunder, før de relevante juridiske og tekniske gates er lukket.
@@ -18,12 +17,12 @@ Målet er én enkel kundeoplevelse med flere tydeligt adskilte leverandører og 
 3. **Advokatselskabet er et selvstændigt juridisk selskab.** Det indgår eget klientforhold, foretager konfliktkontrol, fastlægger rådgivningsomfang, fører egen sag/journal, fakturerer selv og bærer sit professionelle ansvar.
 4. **Serviceselskabet er et andet, selvstændigt juridisk selskab.** Det indgår egne serviceaftaler, bestiller og/eller leverer ikke-juridiske ydelser inden for sit godkendte forretningsområde, fakturerer selv og bærer ansvaret for egne leverancer. Det er ikke samme juridiske enhed som advokatselskabet.
 5. **Øvrige serviceleverandører er selvstændige leverandører.** Fotograf, rengøring, styling, byggesagkyndig, fremvisningsvært og øvrige leverandører har afgrænsede opgaver, egne vilkår og ansvar for egne leverancer.
-5. **DIRECT er en komplet servicevej.** Kunden kan få hjælp til klargøring, boligmateriale, besigtigelse, fremvisning og praktisk koordinering uden at engagere en traditionel ejendomsmægler.
-6. **Platformindtægt er abonnementsbaseret og ikke betinget af gennemført handel.** Priser, niveauer og betalingsintervaller fastlægges senere.
-7. **Kunden vælger aktivt ydelser.** Et Optata-login er ikke et advokatengagement, en servicebestilling eller et samtykke til ubegrænset datadeling.
-8. **Ingen skjult juridisk virkning.** En status som `SUBMITTED`, `COUNTERED` eller `PLATFORM_ACCEPTED` er en platformshændelse. Den juridiske virkning skal følge særskilt godkendte vilkår og aftaledokumenter.
-9. **Fail closed.** Uklar identitet, rådighed, fuldmagt, samtykke, konflikt, betaling eller dokumentstatus stopper den relevante handling og sendes til manuel afklaring.
-10. **Én digital rejse er ikke ét fælles ansvar.** Optata må gerne vise en samlet oversigt, men hvert selskab og hver professionel er ansvarlig for egne leverancer.
+6. **DIRECT er en komplet servicevej.** Kunden kan få hjælp til klargøring, boligmateriale, besigtigelse, fremvisning og praktisk koordinering uden at engagere en traditionel ejendomsmægler.
+7. **Platformindtægt er abonnementsbaseret og ikke betinget af gennemført handel.** Priser, niveauer og betalingsintervaller fastlægges senere.
+8. **Kunden vælger aktivt ydelser.** Et Optata-login er ikke et advokatengagement, en servicebestilling eller et samtykke til ubegrænset datadeling.
+9. **Ingen skjult juridisk virkning.** En status som `SUBMITTED`, `COUNTERED` eller `PLATFORM_ACCEPTED` er en platformshændelse. Den juridiske virkning skal følge særskilt godkendte vilkår og aftaledokumenter.
+10. **Fail closed.** Uklar identitet, rådighed, fuldmagt, samtykke, konflikt, betaling eller dokumentstatus stopper den relevante handling og sendes til manuel afklaring.
+11. **Én digital rejse er ikke ét fælles ansvar.** Optata må gerne vise en samlet oversigt, men hvert selskab og hver professionel er ansvarlig for egne leverancer.
 
 ### 1.2 Dokumenthierarki
 
@@ -112,7 +111,7 @@ Bank/realkredit, administrator/andelsboligforening, byggesagkyndig, energikonsul
 
 RACI betyder: **A** = endeligt ansvarlig for leverancen/beslutningen, **R** = udfører, **C** = konsulteres, **I** = informeres. Tabellen beskriver den ønskede driftsmodel; den er ikke en juridisk ansvarsfraskrivelse.
 
-| Aktivitet/leverance | Optata | Advokatselskab | Serviceleverandør | Kunde | Bank/forening/mægler |
+| Aktivitet/leverance | Optata | Advokatselskab | Serviceselskab/ekstern leverandør | Kunde | Bank/forening/mægler |
 |---|---|---|---|---|---|
 | Platform, konto og adgang | A/R | I | I | R for egne kontooplysninger | I |
 | MitID-identifikation/session | R for integration og teknisk kontrol | R for egen klientkontrol | R for egen kundekontrol | R for autentifikation | R for egne kontroller |
@@ -508,7 +507,7 @@ Før et reelt handelsflow kan lanceres, skal uafhængig dansk rådgiver skriftli
 4. **Domænekontrakter:** Specificér PropertyPresentation, ServiceOrder, Viewing og FulfillmentCase med states, events, commands, ownership og idempotency.
 5. **Syntetisk prototype:** Test begge komplette rejser, herunder sameje, fuldmagt, dødsbo, andel, finansiering og afvigelser.
 6. **Teknisk hardening:** Luk S0/S1-auditfund og Architecture Contracts før real-data transaktionsflow.
-7. **Baselineopdatering:** Først efter eksplicit godkendelse indarbejdes accepterede beslutninger i v5.2, ADR'er, arkitektur, kontrakter og backlog.
+7. **Baselineopdatering:** Selskabsadskillelsen mellem Optata, advokatselskabet og Serviceselskabet er indarbejdet i v5.2 og arkitektur på denne branch. Resterende produktbeslutninger indarbejdes først efter eksplicit godkendelse.
 
 ### Definition of Ready for implementation
 
