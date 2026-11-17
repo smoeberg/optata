@@ -1,4 +1,6 @@
-> **VIGTIGT — status:** Punkterne 5–6 beskriver den tidligere M3-invitations-/leadmodel og er historiske. M3 som køber→mægler-invitation/reveal er forkastet. Brug `docs/backlog/S6.md` og projektgrundlag v5.2. Punkt 7–10 er designmateriale underordnet projektgrundlag v5.2 og arkitektur v2.1.\n\n# Design
+> **VIGTIGT — status:** Punkterne 5–6 beskriver den tidligere M3-invitations-/leadmodel og er historiske. M3 som køber→mægler-invitation/reveal er forkastet. Brug `docs/backlog/S6.md` og projektgrundlag v5.2. Punkt 7–10 er designmateriale underordnet projektgrundlag v5.2 og arkitektur v2.1.
+
+# Design
 
 Designleverancerne fra designfasen, lagt ind uændrede. Læs i denne rækkefølge:
 
