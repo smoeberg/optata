@@ -1,4 +1,6 @@
-> **HISTORISK / SUPERSEDED:** Dette dokument beskriver den tidligere M3-invitations- og leadmodel. M3 som køber→mægler-invitation/reveal er forkastet. Brug S6-backloggen, arkitektur v2.1 og projektgrundlag v5.2. Dokumentet bevares kun som beslutningshistorik.\n\n# M3-opdatering — events, sprint-renummerering og nye guards
+> **HISTORISK / SUPERSEDED:** Dette dokument beskriver den tidligere M3-invitations- og leadmodel. M3 som køber→mægler-invitation/reveal er forkastet. Brug S6-backloggen, arkitektur v2.1 og projektgrundlag v5.2. Dokumentet bevares kun som beslutningshistorik.
+
+# M3-opdatering — events, sprint-renummerering og nye guards
 
 Del af M3-opdateringen (udbudsmatch). Arkitektur-deltaet er indarbejdet i
 `docs/architecture/ARCHITECTURE.md` (v1.1) og ADR-016–018 i `docs/adr/`.
