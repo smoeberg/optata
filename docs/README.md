@@ -4,6 +4,8 @@
 - `Optata - Projektgrundlag v5.2.md` — produkt, forretning, roller, faser og juridiske gates.
 - `architecture/ARCHITECTURE.md` — moduler, datazoner, invariants, flows og systemgrænser.
 - `architecture/ARCHITECTURE-CONTRACTS-v1.0.md` — foreslåede tværgående sikkerheds-, transaktions-, event- og workflowkontrakter. Status er Proposed indtil review.
+- `security/ROLE-AUTHORITY-MODEL-v1.0.md` — fælles principals, relationer, organisationsroller, capabilities, rettighedsmatrix og negative tests. Status er Proposed.
+- `adr/ADR-020-role-authority-model.md` — beslutningsforslag om fælles rolle- og autoritetsmodel.
 - `adr/ADR-017-structure-c-supersession.md` — beslutningsretning for struktur C.
 - `adr/ADR-019-relocation-case.md` — foreslået koordineret flytteforløb med separate salg- og købsspor.
 - `backlog/S0-S1.md`, `S3.md`, `S4.md`, `S5.md`, `S6.md` — implementeringsplan.
