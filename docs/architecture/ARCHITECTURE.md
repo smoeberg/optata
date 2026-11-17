@@ -22,6 +22,17 @@ Optata ejer platformens proces- og datalag. Det er ikke ensbetydende med, at Opt
 - Alle eksterne data har source, license, provenance, observed_at og valid-time.
 - Feature flags kan slukke features, aldrig omgå guards.
 - Syntetiske fixtures er deterministiske og tydeligt vandmærkede.
+- Optata, advokatselskabet og serviceselskabet er tre selvstændige juridiske enheder; systemadgang, dataflows og kommercielle handoffs må ikke behandle dem som én organisation.
+
+### 2.1 Juridiske enheder og systemgrænser
+
+| Juridisk enhed | Systemrolle | Ejer egne | Må ikke automatisk få |
+|---|---|---|---|
+| Optata-platformsselskabet | Platformoperatør og leverandør af egne software-/abonnementsprodukter | Platformkonti, platformens domænedata, egne support- og abonnementsforløb | Advokatselskabets klientjournal, juridiske rådgivningsnotater eller Serviceselskabets interne leverance-/personaledata |
+| Advokatselskabet | Selvstændig juridisk leverandør med eget klientforhold | Klientaccept, konfliktkontrol, juridisk sag/journal, rådgivning og egne honorarer | Optatas generelle køber-/sælgerdata eller Serviceselskabets ordre-/leverandørdata ud over konkret lovligt opdrag |
+| Serviceselskabet | Selvstændig leverandør af ikke-juridiske ydelser | Egne serviceaftaler, serviceordrer, leverandørrelationer, leverancer, reklamationer og fakturaer | Advokatselskabets klientjournal eller juridiske vurderinger; uvedkommende køber-/finansieringsdata |
+
+Selskabsgrænser er også adgangs- og formålsgrænser. Fælles login/SSO, fælles drift, fælles ejerskab eller delte systemer giver ikke i sig selv adgangsret. Hvert handoff skal identificere afsender, modtager, konkret sag/formål, felter, retsgrundlag, gyldighed og audit. Hvilket selskab der er selvstændig dataansvarlig, fælles dataansvarlig eller databehandler, afgøres konkret og må ikke hardcodes ud fra selskabsnavnet alene.
 
 ## 3. Zoner
 
@@ -52,6 +63,7 @@ k≥5 er ikke alene tilstrækkeligt til anonymisering. Zone C-publicering kræve
 | offers | OfferLedger, bud, modbud, accept og historik | fri chat eller uautoriseret aftaleindgåelse |
 | campaigns | samtykkebaseret kampagnestyring og levering | ekstern kontakt eller målretning uden samtykke |
 | relocation | koordinerer flytteforløb, mål, tidslinje, scenarier, afhængigheder og beslutningshistorik | SaleMandate, købsordre, OfferLedger, identitetsvault, finansieringsafgørelser eller juridiske aftaler |
+| service_orders | servicebestillinger, leverandør, scope, pris, leverancestatus og reklamationsreference for Serviceselskabets ydelser | Advokatengagement, klientjournal eller juridiske beslutninger |
 
 
 **Grænser:** Et modul skriver kun egne tabeller. Andre moduler bruger kontrakter/domæneevents. Direkte tabeladgang på tværs er forbudt, undtagen eksplicitte read models med ejer og test.
@@ -143,11 +155,11 @@ INGESTED → VALIDATED → ACTIVE → UNDER_OFFER → SOLD / WITHDRAWN / STALE /
 |---|---|---|
 | Mandat | Optata-platformen registrerer mandat | Samme |
 | Budrails | Optata OfferLedger | Samme |
-| Udførelse | Godkendt juridisk/closingpartner | Valgt mægler/udfører |
+| Udførelse | Serviceselskabet/konkrete serviceleverandører for ikke-juridiske ydelser; advokatselskabet eller anden juridisk leverandør kun efter særskilt klientengagement | Valgt mægler/udfører under eget mandat og ansvar |
 | Optatas rolle | Platform inden for juridisk godkendt scope | Platform + scoped koordinering |
 | Kommercielt vederlag | Ikke fastlagt som endelig pris | Deltagelses-/abonnementsmodel er hypotese |
 
-Begge veje er målarkitektur. Ingen prod-release uden LG-1, LG-5 og relevante betalings-/forbrugerretlige gates.
+Begge veje er målarkitektur. DIRECT er ikke én samlet leverance fra én juridisk enhed: Serviceselskabet håndterer kun særskilt bestilte ikke-juridiske services; advokatselskabet håndterer kun juridiske opgaver under eget klientengagement. Ingen prod-release uden LG-1, LG-5 og relevante betalings-/forbrugerretlige gates.
 
 ## 9. API- og eventprincipper
 

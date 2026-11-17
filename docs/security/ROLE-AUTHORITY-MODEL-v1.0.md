@@ -32,7 +32,7 @@ En rolle beskriver en funktion. Den giver ikke i sig selv adgang til data eller 
 |---|---|---|
 | HUMAN | MitID-verificeret person | Individuel identitet; CPR må ikke bruges som intern nøgle |
 | SERVICE | ingestion worker, disclosure service, notification worker | Egen teknisk identitet og egne minimale rettigheder; arver ikke automatisk menneskets rettigheder |
-| ORGANIZATION | mæglerfirma, advokatfirma, finansiel partner | Organisationsidentitet; kan ikke logge ind eller handle som en person |
+| ORGANIZATION | Optata-platformsselskab, advokatselskab, serviceselskab, mæglerfirma, finansiel partner | Organisationsidentitet; hver juridisk enhed har egen organisationsidentitet, kontraktrolle og grants; kan ikke logge ind eller handle som en person |
 | SYSTEM_OPERATOR | drifts-/platformsoperatør | Teknisk driftsadgang; ingen implicit adgang til identitetsvault, dokumenter eller forretningsindhold |
 
 En brugerhandling på vegne af en anden skal bevare begge identiteter: `actor` (den faktiske bruger) og `subject/on_behalf_of` (den person eller organisation, handlingen vedrører). Delegation skal kunne verificeres og auditeres. En service, der udfører en godkendt handling, registreres som service actor med oprindelig initiator og grant reference.
@@ -62,13 +62,14 @@ Professionel rolle og organisationsmedlemskab er separate fra den konkrete udpeg
 | Professionel funktion | Mulige capabilities — kun efter konkret grant | Yderligere krav |
 |---|---|---|
 | BROKER | Læse mandatets tilladte oplysninger, opdatere tildelt salgsopgave, indsende tilladte hændelser | Aktiv organisationsmedlemskab, relevant licens/participation, aktivt mandat og scope |
-| LAWYER | Læse og levere materiale til konkret juridisk opgave | Klient-/opgaveudpegning, fortrolighed og dataminimering |
-| CLOSING_PARTNER | Udføre konkrete closing-/dokumentopgaver | Aktiv opgave, verificeret modtager og begrænset datagrundlag |
+| LAWYER | Læse og levere materiale til konkret juridisk opgave på vegne af advokatselskabet | Advokatselskabets klientaccept, konkret opgave, fortrolighed og dataminimering |
+| SERVICES_PROVIDER | Udføre ikke-juridiske serviceopgaver på vegne af Serviceselskabet eller som direkte kontraktpart | Egen serviceaftale, aktiv opgave, verificeret modtager og begrænset datagrundlag; ingen juridisk rådgivning |
+| CLOSING_PARTNER | Udføre konkret closing-/dokumentopgave, hvis ikke opgaven er advokatforbeholdt | Selvstændig juridisk enhed, konkret aftale/opgave, verificeret modtager og begrænset datagrundlag |
 | FINANCING_PARTNER | Modtage særskilt godkendte finansieringsoplysninger | Separat formål, modtager, datakategori og tidsbegrænset samtykke/retsgrundlag |
 | VALUATION_PARTNER | Modtage nødvendige ejendoms-/vurderingsdata | Konkret opgave, kilde-/licensvilkår og begrænset scope |
 | DATA_PROVIDER | Levere data gennem godkendt adapter/kontrakt | Kildeidentitet, licens, schema, provenance og ingest-scope |
 
-Organisationsmedlemskab giver aldrig automatisk adgang til organisationens sager. Organisationens godkendte scope, personens aktive medlemskab, konkret opgave/grant og gældende licens skal alle være opfyldt. Fjernelse af en medarbejder skal straks fjerne dennes fremtidige adgang uden at slette auditsporet.
+Optata-platformsselskabet, advokatselskabet og Serviceselskabet skal registreres som separate organisationsidentiteter. En person kan have relationer til flere selskaber, men disse relationer og grants er separate og må ikke sammenblandes. Organisationsmedlemskab giver aldrig automatisk adgang til organisationens sager. Organisationens godkendte scope, personens aktive medlemskab, konkret opgave/grant og gældende licens skal alle være opfyldt. Fjernelse af en medarbejder skal straks fjerne dennes fremtidige adgang uden at slette auditsporet.
 
 ## 6. Tekniske service- og driftsroller
 
@@ -116,7 +117,8 @@ Matrixen viser den maksimale designmæssige retning, ikke en aktuel produktionsa
 | Sælger/medejer | Own | — | Own, individuel partsret | Scoped som mandatpart | Scoped hvis deltager | Via disclosure |
 | Fuldmægtig | Own | Scoped grant | Scoped grant | Scoped grant | Scoped grant | Kun hvis grant udtrykkeligt omfatter det |
 | Mægler/udfører | Own | — | Scoped aktivt mandat | Scoped mandat og opgave | — som standard | Ingen direkte adgang |
-| Advokat/closingpartner | Own | — | Scoped konkret opgave | Scoped konkret opgave | — som standard | Kun dataminimeret disclosure |
+| Advokat fra advokatselskabet | Own | — | Scoped konkret juridisk opgave | Scoped konkret juridisk opgave | — som standard | Kun dataminimeret disclosure |
+| Serviceselskab/servicemedarbejder | Own | — | Kun praktiske servicefelter efter konkret opgave | — | — som standard | Ingen direkte adgang; kun nødvendige serviceoplysninger |
 | Finansieringspartner | Own | — | — | — | Kun særskilt finansieringsscope | Ingen direkte adgang |
 | Platform support/admin | Teknisk supportmetadata | — | — | — | — | Ingen |
 | Disclosure service | — | — | — | — | — | Kun godkendt, konkret disclosure |
