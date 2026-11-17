@@ -53,12 +53,17 @@ def test_anonymous_can_read_zone_a(conn):
 @pytest.mark.parametrize("role", ["public_reader", "app_role"])
 def test_runtime_roles_cannot_read_property_base_table(conn, role):
     """The base table is not a runtime read model; access must go through the allowlist."""
+    assert not conn.execute(
+        "SELECT has_table_privilege(%s, 'zone_a.property', 'SELECT')", (role,)
+    ).fetchone()[0]
     conn.execute(f"SET LOCAL ROLE {role}")
+    with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
+        conn.execute("SELECT address_id FROM zone_a.property LIMIT 1")
     with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
         conn.execute("SELECT owner_cvr FROM zone_a.property LIMIT 1")
 
 
-def test_public_reader_cannot_read_owner_cvr_or_unreviewed_attrs(conn, dataset):
+def test_public_reader_cannot_read_owner_cvr_or_unreviewed_attrs(conn):
     """The public view exposes an allowlist, including an allowlisted attrs object."""
     probe_id = conn.execute(
         """
