@@ -9,6 +9,12 @@ Verificeret efterspørgsel på boligmarkedet: købere registrerer, hvad de vil k
 | `docs/Optata - Projektgrundlag v5.1.md` | Masterdokumentet: forretning, koncept, data, mekanismer, sikkerhed, jura og leveranceplan |
 | `docs/historik/Optata - Projektgrundlag v5.0.md` | Forrige version |
 | `docs/bilag/` | De elleve tekniske bilag (06–16), uændrede, med en oversigt over hvad v5.1 har ændret |
+| `docs/design/` | Designleverancer: brandidé, visuel identitet, tekstdeck, mærke, mails, PDF og skærme |
+| `docs/architecture/ARCHITECTURE.md` | Arkitekturen: formål, zoner, moduler og de 10 invarianter |
+| `docs/backlog/S3.md`, `S4.md` og `S5.md` | Sprintbacklogs for S3–S5 (S0 og S1 ligger i `docs/backlog/S0-S1.md`) |
+| `docs/security/guards-s3.md` | Guard-tests til S3 som specifikation (udkast, afventer DK-review) |
+| `docs/compliance/legal-questions-week6.md` | Spørgsmål, juristen skal besvare skriftligt til uge 6 |
+| `docs/backlog/docs-struktur.md` | Foreslået samlet `docs/`-struktur og commit-plan |
 
 Ændringerne fra v5.0 til v5.1 står i §0.2 i masterdokumentet. De åbne beslutninger står i §0.3.
 
