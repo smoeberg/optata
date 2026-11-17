@@ -47,6 +47,7 @@ Ingen backlog eller designfil kan tilsidesætte en invariant eller et juridisk r
 | P-09 | Campaign er et separat distributionsmodul | Kræver eget aktivt licenseret udbud, gyldigt samtykke og målretnings-/frekvensguards |
 | P-10 | Modulær monolit er første implementeringsform | Ingen mikroserviceopdeling før målbar driftsmæssig begrundelse |
 | P-11 | Optata, advokatselskabet og serviceselskabet er tre selvstændige juridiske selskaber | Egne aftaler, leverancer, beslutninger, fakturering, ansvar og adgangsgrænser; konkret juridisk/regulatorisk vurdering er fortsat påkrævet |
+| P-12 | Area Intelligence er et selvstændigt produktområde, der sammen med Property Discovery bygger på én fælles geografisk rygrad | Områder profileres med dokumenterede faciliteter og tilgængelig statistik; geografiske niveauer og datakilders opløsning må ikke forveksles |
 
 ## 3. Produktets aktører og ansvar
 
@@ -99,6 +100,28 @@ Optata skal understøtte en families koordinerede flytning, hvor salg af nuvære
 - Optata må ikke fremstille scenarier som finansiel, juridisk eller ejendomsmæssig rådgivning. Forhold, der kræver autoriseret eller individuel rådgivning, markeres og henvises til relevant fagperson.
 
 RelocationCase er et koordinerende workflow under Architecture Contract C-06 (saga). Eksterne og irreversible handlinger kræver særskilt command, autorisation, samtykke og audit efter C-07. Det samlede forløb må aldrig behandles som én distribueret ACID-transaktion eller én uadskillelig bolighandel.
+
+### 4.6 Area Intelligence og fælles geografisk rygrad
+
+Area Intelligence er et selvstændigt produktområde ved siden af Property Discovery. De to produktområder deler geografisk identitet, geometri, kildeproveniens og område-/ejendomsrelationer:
+
+- **Area Intelligence** beskriver et områdes faciliteter, services, demografi, økonomi, uddannelse, beskæftigelse, boligforhold og øvrige dokumenterede kvaliteter.
+- **Property Discovery** beskriver den konkrete adresse og ejendom med registeroplysninger, ejendomsdata og rapporter.
+- En bruger skal kunne navigere fra et bredt geografisk niveau til en konkret adresse og fra en ejendom tilbage til dens relevante områder.
+
+Optatas geografiske navigation omfatter: **region → kommune → område → by → bydel → kvarter → gade → hus/adresse**. Dette er en bruger- og produktnavigation, ikke en påstand om ét strengt administrativt træ. Officielle geografier kan overlappe, have forskellige formål eller ændre grænser over tid. Optata skal derfor bevare geografitype, stabil kildeidentifikator, geometri, gyldighed og versionshistorik.
+
+Officielle geografiske enheder (fx region, kommune, byområde, sogn og postnummer) skal holdes adskilt fra Optata-definerede områder, bydele og kvarterer. Optata-definerede områder skal have dokumenterede afgrænsningsregler, versionering og relationer til de officielle enheder. Gader og adresser knyttes til autoritative adresseidentiteter; en ejendom/BFE må ikke sidestilles med én adresse.
+
+Hvert område skal kunne have en standardiseret profil. Produktretningen er at kortlægge **30 primære facilitets- og servicetyper** pr. område og gøre det muligt at åbne kategorien, se de konkrete steder og undersøge deres oplysninger. Den endelige taksonomi, underkategorier og kategorispecifikke kilder fastlægges i en særskilt specifikation/arbejdspakke; eksempler i dialog og prototyper er ikke en endeligt godkendt taksonomi.
+
+Områdeprofiler kan desuden indeholde officielle statistiske indikatorer, herunder indkomst, disponibel indkomst, demografi, beskæftigelse, uddannelse og boligforhold. En indikator må kun vises på den geografiske opløsning, som kilden faktisk understøtter. Optata må ikke nedskalere kommunetal til bydele, kvarterer, gader eller adresser og præsentere dem som observerede lokale tal. Estimater skal være tydeligt mærket, metodebeskrevet og adskilt fra officiel statistik. Små grupper og følsomme statistiske udtræk skal følge kilde- og disclosurebegrænsninger.
+
+Facility discovery kan bruge AI til at finde kandidater og foreslå ændringer, men AI-genererede udsagn er ikke registerfakta. Den tiltænkte kontrolmodel har tre adskilte roller: discovery, uafhængig verification og audit. Kontrollerne skal arbejde på dokumentation og kilder – ikke blot gentage hinandens konklusioner. Kun dokumenterede og godkendte faciliteter tælles som verificerede. Uafklarede, modstridende eller utilstrækkeligt dokumenterede kandidater sættes i karantæne/afventer og må ikke indgå i offentlige totaler. Der skal være sporbarhed til kilde, observationstid, kontrolresultat, geografisk placering, status og ændringshistorik.
+
+Eksterne data må kun indsamles, lagres, sammenstilles og vises inden for dokumenterede licens- og brugsrettigheder. Ingen scraping eller antagelse om videredistributionsret. Realdata og offentlige produktionsprofiler kræver kilde-, licens-, privacy-, sikkerheds- og kvalitetsreview. Første udvikling kan anvende tydeligt mærkede syntetiske data.
+
+Detaljeret produkt- og datakrav findes i [Area Intelligence v1.0](product/AREA-INTELLIGENCE.md). Denne produktretning godkender ikke i sig selv en bestemt dataleverandør, den endelige liste over 30 kategorier, konkrete API-/DB-kontrakter eller produktionsbrug af AI-agenter.
 
 ## 5. Campaign og udbudsdata
 
@@ -194,7 +217,7 @@ En opgave er **Done**, når:
 5. Pris-/indtægtsmodel og enhedsøkonomi efter ny produktstruktur.
 6. Dataansvarsroller, behandlingsgrundlag og lovlig datadeling mellem de tre selskaber og øvrige partnere, herunder Campaign.
 7. Licenser til Datafordeler/EJF, DAGI, medier og feeds.
-8. Geografisk definition af kvarter og gade samt dens versionering.
+8. Den præcise afgrænsningsmetode, versionering og vedligeholdelse af Optata-definerede områder, bydele og kvarterer; geografisk navigation og skellet mellem officielle og Optata-definerede geografier er fastlagt i P-12.
 9. Hosting, observability, branch protection og uafhængig reviewkapacitet.
 10. Om gamle M3- og e-mail-/brevflows skal bevares som historik alene (anbefaling: ja).
 11. RelocationCase v1: præcis husstands-/deltagerrelation, samtykkegranularitet og scenariomodellens grænser.
@@ -203,5 +226,6 @@ En opgave er **Done**, når:
 
 - **v5.2:** Struktur C fastlagt som produktmål; SaleMandate, OfferLedger og Campaign indarbejdet; M3 som lead-/invitationkanal og gamle e-mail-/brevflows markeret som forældede; juridiske gates, faseplan og governance samlet.
 - **v5.2-addendum (Proposed):** RelocationCase som koordinerende flytteforløb; salg og køb forbliver separate domænespor.
+- **v5.2 Area Intelligence direction:** Area Intelligence fastlagt som selvstændigt produktområde sammen med Property Discovery; fælles geografisk rygrad, 30 facilitetskategorier som produktmål, kildebaseret AI-verifikation og statistisk opløsning dokumenteret. Detaljer og implementering er fortsat under afklaring.
 - **v5.2 company-boundary update:** Optata, advokatselskabet og serviceselskabet fastlagt som tre selvstændige juridiske selskaber; konkrete regulatoriske/dataretlige forhold forbliver åbne gates.
 - **v5.1:** Historisk baseline fra 16. november 2026. Se `docs/historik/` eller git-historikken.
