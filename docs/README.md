@@ -14,7 +14,8 @@
 - `product/PRODUCT-CLOSURE-AND-DEVELOPMENT-READINESS-v1.0.md` — samlet audit af handelsrejsen, AI-agentinput, mangler, 20 %-mål og beslutninger før konceptlås. Status: audit/anbefaling, ikke godkendt baseline.
 
 ## Handelsmodel og service blueprint
-- `product/TRANSACTION-MODEL-AND-SERVICE-BLUEPRINT-v0.1.md` — stifterretning for Optatas juridiske/platformsmæssige grænse, advokatselskab, DIRECT, komplette køber-/sælgerrejser, dødsbo, budmekanik, fulfillment og abonnementsmodel. Arbejdsgrundlag; ikke juridisk godkendt eller gældende baseline.
+- `product/TRANSACTION-MODEL-AND-SERVICE-BLUEPRINT-v0.1.md` — stifterretning for Optatas juridiske/platformsmæssige grænse, advokatselskab, DIRECT, komplette køber-/sælgerrejser, dødsbo, budmekanik, fulfillment og abonnementsmodel. Dokumentets interne versionsangivelse er v0.2; filnavnet er bevaret for historisk stabilitet. Arbejdsgrundlag; ikke juridisk godkendt eller gældende baseline.
+- `product/SERVICE-AND-RESPONSIBILITY-ARCHITECTURE-v1.0.md` — foreslået ansvars-/RACI-model, selskabs- og leverandørgrænser, DIRECT-service blueprint, køber-/sælgerrejser, FulfillmentCase, data-/betalingsgrænser, release gates og acceptance criteria. Proposed; ikke juridisk godkendt eller gældende baseline.
 
 ## Supplerende specifikationer
 - `design/` — UI, produktdesign, listings, Campaign og markedsambition.
@@ -28,6 +29,7 @@
 - Tidligere S3–S6-planer og M3-flow er erstattet af de aktuelle backlogfiler.
 - ADR'er med status Superseded/Retired er historik. Kun Accepted ADR'er er normative; Proposed kræver eksplicit godkendelse.
 - Architecture Contracts v1.0 er et foreslået teknisk kontraktsæt og er ikke en implementerings- eller sikkerhedsgodkendelse.
+- Produkt- og servicearkitekturdokumenter er arbejdsgrundlag, indtil beslutninger er eksplicit godkendt og indarbejdet i v5.2 og relevante ADR'er.
 
 ## Ændringsregel
 Alle ændringer i produktbeslutninger skal opdatere v5.2 og relevante ADR'er. Alle ændringer i systemadfærd skal også opdatere arkitektur, kontrakter, backlog og tests.
