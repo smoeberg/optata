@@ -51,6 +51,8 @@ k≥5 er ikke alene tilstrækkeligt til anonymisering. Zone C-publicering kræve
 | mandates | SaleMandate, parter, scope, executor, vilkår | antagelse om juridisk formidlingstilladelse |
 | offers | OfferLedger, bud, modbud, accept og historik | fri chat eller uautoriseret aftaleindgåelse |
 | campaigns | samtykkebaseret kampagnestyring og levering | ekstern kontakt eller målretning uden samtykke |
+| relocation | koordinerer flytteforløb, mål, tidslinje, scenarier, afhængigheder og beslutningshistorik | SaleMandate, købsordre, OfferLedger, identitetsvault, finansieringsafgørelser eller juridiske aftaler |
+
 
 **Grænser:** Et modul skriver kun egne tabeller. Andre moduler bruger kontrakter/domæneevents. Direkte tabeladgang på tværs er forbudt, undtagen eksplicitte read models med ejer og test.
 
@@ -62,7 +64,8 @@ k≥5 er ikke alene tilstrækkeligt til anonymisering. Zone C-publicering kræve
 - `area_id`, `street_id`, `municipality_id`: versionsbundne geografiske scopes.
 - `identity_id`: intern personidentitet, aldrig CPR.
 - `household_key`: dedup-nøgle med formålsbegrænset scope.
-- `mandate_id`, `offer_id`, `listing_id`, `campaign_id`: UUID.
+- `mandate_id`, `offer_id`, `listing_id`, `campaign_id`, `relocation_case_id`: UUID.
+- RelocationCase holder typed references til andre modulers aggregates; den ejer eller skriver ikke deres data.
 - `source_ref` + `license_ref`: proveniens og brugsret for eksterne data.
 
 Alle relationer mellem personidentitet og ejendom/ordre skal være formålsbundne, RLS-beskyttede og auditerede.
@@ -122,6 +125,18 @@ DRAFT → VALIDATING → REVIEW → APPROVED → SCHEDULED → DELIVERING → CO
 ### 7.5 Listing
 INGESTED → VALIDATED → ACTIVE → UNDER_OFFER → SOLD / WITHDRAWN / STALE / LICENSE_BLOCKED. STALE må aldrig automatisk fortolkes som SOLD.
 
+
+### Koordineret flytning
+27. RelocationCase er et koordinerende aggregate/workflow, ikke en handel, et mandat eller en købsaftale.
+28. SaleMandate, købsordre/-interesse og OfferLedger forbliver separate aggregates med hver sin ejer, state machine, juridiske grundlag og audit.
+29. RelocationCase må kun læse status gennem versionerede domænekontrakter/read models; direkte cross-module writes og direkte tabelkobling er forbudt.
+30. Hvert spor kan startes, sættes på pause, afsluttes eller trækkes tilbage uafhængigt. En statusændring i et spor må ikke implicit aktivere, annullere eller ændre et andet.
+31. Case-deltagere og husstandsrelationer skal verificeres og autoriseres. Hver deltager godkender egne handlinger; én persons samtykke kan ikke udvide en anden persons adgang eller mandat.
+32. Samtykke er granular per formål, datakategori, modtager, spor og varighed. Linkning af salg og køb giver ikke automatisk ret til at dele identitet, økonomi, bud eller dokumenter på tværs.
+33. Scenarier skal vise datakilde, observationstid, gyldighed, status (verificeret/estimat/muligt match/uafklaret), antagelser og usikkerhed. Match må ikke fremstilles som tilgængelig bolig eller garanteret handel.
+34. Finansierings- og juridiske forudsætninger markeres som afklaringspunkter; Optata må ikke udlede eller love finansiel/juridisk gennemførlighed uden dokumenteret grundlag og relevant faglig vurdering.
+35. Koordinering på tværs følger saga-principperne i C-06 og audit/outbox i C-07. Der findes ingen samlet transaktion, der atomisk gennemfører salg og køb.
+
 ## 8. To udførelsesveje
 
 | | DIRECT | AGENT_EXECUTED |
@@ -167,6 +182,7 @@ Begge veje er målarkitektur. Ingen prod-release uden LG-1, LG-5 og relevante be
 | Campaign | Specifikation, ikke implementeret |
 | Listing feed | Kontrakt/spec, ikke produktionsklar |
 | Partner fulfillment | Ikke implementeret |
+| RelocationCase | Foreslået tværgående proces; ikke implementeret |
 
 ## 12. Ændringsstyring
 
