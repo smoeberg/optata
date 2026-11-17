@@ -13,6 +13,9 @@
 ## Produktlukning og udviklingsparathed
 - `product/PRODUCT-CLOSURE-AND-DEVELOPMENT-READINESS-v1.0.md` — samlet audit af handelsrejsen, AI-agentinput, mangler, 20 %-mål og beslutninger før konceptlås. Status: audit/anbefaling, ikke godkendt baseline.
 
+## Handelsmodel og service blueprint
+- `product/TRANSACTION-MODEL-AND-SERVICE-BLUEPRINT-v0.1.md` — stifterretning for Optatas juridiske/platformsmæssige grænse, advokatselskab, DIRECT, komplette køber-/sælgerrejser, dødsbo, budmekanik, fulfillment og abonnementsmodel. Arbejdsgrundlag; ikke juridisk godkendt eller gældende baseline.
+
 ## Supplerende specifikationer
 - `design/` — UI, produktdesign, listings, Campaign og markedsambition.
 - `compliance/` — åbne juristspørgsmål og aftaleudkast.
