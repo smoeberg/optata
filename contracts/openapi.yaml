@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Optata Core API
-  version: 0.6.0
+  version: 0.7.0
   description: >
     Contract first. This file is the single source of truth for the HTTP API.
     Skeleton for S0: only zone A (public data) and the health check are defined.
@@ -66,6 +66,7 @@ components:
             - REVISION_NOT_ACCEPTED
             - TOO_MANY_DIMENSIONS
             - GEO_TOO_GRANULAR
+            - NOT_FOUND
         message: { type: string }
         trace_id: { type: string }
 
@@ -86,6 +87,92 @@ components:
         parent_id: { type: [string, "null"] }
         name: { type: string }
         dwelling_count: { type: integer }
+
+    Count:
+      type: object
+      required: [key, count]
+      additionalProperties: false
+      properties:
+        key: { type: string }
+        count: { type: integer }
+
+    Fakta:
+      type: object
+      description: Housing stock in the area, from the public registers. Zone A only.
+      required: [dwelling_count, non_residential_count, by_usage, by_owner_kind, areal, opfoerelsesaar]
+      additionalProperties: false
+      properties:
+        dwelling_count: { type: integer }
+        non_residential_count: { type: integer }
+        by_usage: { type: array, items: { $ref: '#/components/schemas/Count' } }
+        by_owner_kind: { type: array, items: { $ref: '#/components/schemas/Count' } }
+        areal:
+          type: [object, "null"]
+          required: [p25, median, p75]
+          additionalProperties: false
+          properties:
+            p25: { type: number }
+            median: { type: number }
+            p75: { type: number }
+        opfoerelsesaar:
+          type: [object, "null"]
+          required: [min, median, max]
+          additionalProperties: false
+          properties:
+            min: { type: integer }
+            median: { type: integer }
+            max: { type: integer }
+
+    AreaProfile:
+      type: object
+      required: [area, path, children, layers, meta]
+      additionalProperties: false
+      properties:
+        area: { $ref: '#/components/schemas/AreaSummary' }
+        path:
+          description: The area's ancestors from municipality down to the area itself.
+          type: array
+          items: { $ref: '#/components/schemas/AreaSummary' }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/AreaSummary' }
+        layers:
+          type: object
+          required: [fakta, bevaegelse, hverdag, efterspoergsel]
+          additionalProperties: false
+          properties:
+            fakta: { $ref: '#/components/schemas/Fakta' }
+            bevaegelse:
+              description: Claims with source and date. Empty until the agent exists (S2).
+              type: array
+              maxItems: 0
+            hverdag:
+              description: Not built yet. Null means no data, never zero.
+              type: "null"
+            efterspoergsel:
+              description: >
+                Aggregated demand, k >= 5. Null means no data yet, never zero.
+                Only null is allowed until the zone C aggregates exist.
+              type: "null"
+        meta:
+          type: object
+          required: [layer_status, synthetic, data_as_of, density_frozen]
+          additionalProperties: false
+          properties:
+            layer_status:
+              type: object
+              required: [fakta, bevaegelse, hverdag, efterspoergsel]
+              additionalProperties: false
+              properties:
+                fakta: { type: string, enum: [OK, NO_DATA_YET] }
+                bevaegelse: { type: string, enum: [OK, NO_DATA_YET] }
+                hverdag: { type: string, enum: [OK, NO_DATA_YET] }
+                efterspoergsel: { type: string, enum: [OK, NO_DATA_YET] }
+            synthetic:
+              description: True when the figures come from generated test data.
+              type: boolean
+            data_as_of: { type: [string, "null"], format: date-time }
+            density_frozen: { type: boolean }
 
     QualityFlags:
       type: object
@@ -126,7 +213,10 @@ paths:
     get:
       tags: [public]
       parameters:
-        - { name: q, in: query, schema: { type: string } }
+        - { name: q, in: query, schema: { type: string, maxLength: 80 } }
+        - name: level
+          in: query
+          schema: { type: string, enum: [MUNICIPALITY, ZIP, NEIGHBOURHOOD, STREET] }
       responses:
         "200":
           description: Areas matching the query
@@ -136,11 +226,28 @@ paths:
                 type: array
                 items: { $ref: '#/components/schemas/AreaSummary' }
 
+  /areas/{area_id}/profile:
+    get:
+      tags: [public]
+      parameters:
+        - { name: area_id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Area profile with four layers. Layers without data are null, never zero.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AreaProfile' }
+        "404":
+          description: Unknown area
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
   /properties/{address_id}:
     get:
       tags: [public]
       parameters:
-        - { name: address_id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: address_id, in: path, required: true, schema: { type: string } }
       responses:
         "200":
           description: Zone A lookup for one address
