@@ -177,3 +177,12 @@ Begge veje er målarkitektur. Ingen prod-release uden LG-1, LG-5 og relevante be
 4. Menneskelig review af sikkerhed og juridiske antagelser.
 
 **Denne arkitektur er teknisk målarkitektur, ikke juridisk godkendelse.**
+
+
+## 13. Tværgående kontrakter
+
+De konkrete, testbare krav til least privilege, identitets-/sessionsikkerhed, event-authoritative writes, saga-workflows, audit/outbox, Zone C-release, samtykke-tilbagekaldelse, projections og ingestion findes i:
+
+- [Architecture Contracts v1.0](ARCHITECTURE-CONTRACTS-v1.0.md)
+
+Kontraktdokumentet er **Proposed for technical review**. Det beskriver ønsket kontrolniveau, men betyder ikke, at kontrollerne er implementeret, reviewet eller godkendt til produktion. Auditfund A-01–A-12 forbliver åbne, indtil de konkrete acceptkriterier er opfyldt.
