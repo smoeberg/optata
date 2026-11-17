@@ -47,7 +47,63 @@ def test_anonymous_cannot_reach_zone_b(conn, table):
 
 def test_anonymous_can_read_zone_a(conn):
     conn.execute("SET LOCAL ROLE public_reader")
-    assert conn.execute("SELECT count(*) FROM zone_a.property").fetchone()[0] > 0
+    assert conn.execute("SELECT count(address_id) FROM zone_a.property_public").fetchone()[0] > 0
+
+
+@pytest.mark.parametrize("role", ["public_reader", "app_role"])
+def test_runtime_roles_cannot_read_property_base_table(conn, role):
+    """The base table is not a runtime read model; access must go through the allowlist."""
+    conn.execute(f"SET LOCAL ROLE {role}")
+    with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
+        conn.execute("SELECT owner_cvr FROM zone_a.property LIMIT 1")
+
+
+def test_public_reader_cannot_read_owner_cvr_or_unreviewed_attrs(conn, dataset):
+    """The public view exposes an allowlist, including an allowlisted attrs object."""
+    probe_id = conn.execute(
+        """
+        INSERT INTO zone_a.property (
+            address_id, bfe, municipality_id, zip_id, neighbourhood_id, street_id,
+            attrs, owner_kind, owner_cvr, quality_flags, lon, lat, valid_from,
+            valid_to, recorded_at, synthetic_seed
+        )
+        VALUES (
+            gen_random_uuid(), 'SYN-A01-PROBE', 'SYN-MUN-01', 'SYN-ZIP-0001',
+            'SYN-NBH-01', 'SYN-STR-0001',
+            '{"anvendelse":"140","areal":100,"vaerelser":3,"opfoerelsesaar":2000,"owner_cvr":"99999999"}',
+            'COMPANY', '99999999', '{}', 11.0, 56.5, DATE '2020-01-01',
+            NULL, now(), 42
+        )
+        RETURNING address_id::text
+        """
+    ).fetchone()[0]
+
+    conn.execute("SET LOCAL ROLE public_reader")
+    attrs = conn.execute(
+        "SELECT attrs FROM zone_a.property_public WHERE address_id = %s",
+        (probe_id,),
+    ).fetchone()[0]
+    assert attrs == {
+        "anvendelse": "140",
+        "areal": 100,
+        "vaerelser": 3,
+        "opfoerelsesaar": 2000,
+    }
+
+    columns = conn.execute(
+        """
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema = 'zone_a' AND table_name = 'property_public'
+        """
+    ).fetchall()
+    assert "owner_cvr" not in {row[0] for row in columns}
+
+
+def test_app_role_has_no_property_public_access(conn):
+    conn.execute("SET LOCAL ROLE app_role")
+    with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
+        conn.execute("SELECT address_id FROM zone_a.property_public LIMIT 1")
 
 
 def test_no_role_can_write_the_vault(conn):
