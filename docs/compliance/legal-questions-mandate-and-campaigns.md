@@ -1,4 +1,6 @@
-> **Status mod projektgrundlag v5.2:** L38–L42 er release gate for SaleMandate, OfferLedger og executor access (S4–S5). L43–L48 er release gate for Campaign (S6). Prioriteringen nedenfor erstatter ældre faseangivelser i dette bilag. Svar skal være skriftlige; spørgsmålene er ikke godkendelser.\n\n# OPTATA — Jurist-bilag: mandat, budbog og kampagner (L38–L48)
+> **Status mod projektgrundlag v5.2:** L38–L42 er release gate for SaleMandate, OfferLedger og executor access (S4–S5). L43–L48 er release gate for Campaign (S6). Prioriteringen nedenfor erstatter ældre faseangivelser i dette bilag. Svar skal være skriftlige; spørgsmålene er ikke godkendelser.
+
+# OPTATA — Jurist-bilag: mandat, budbog og kampagner (L38–L48)
 
 **Format:** Svar + handlingsregel + hjemmel + konsekvens for kode + blokerer deploy + dato/initialer.
 *"Det afhænger af…"* accepteres ikke — skal udmøntes i en regel, vi kan implementere.
