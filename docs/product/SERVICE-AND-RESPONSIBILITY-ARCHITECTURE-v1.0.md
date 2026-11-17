@@ -15,8 +15,9 @@ Målet er én enkel kundeoplevelse med flere tydeligt adskilte leverandører og 
 
 1. **Optata er platformen.** Optata leverer digital adgang, bolig- og købermatch, strukturerede workflows, præsentation, booking, dokumentstatus, beskeder, notifikationer, samtykkestyring og abonnementsprodukter.
 2. **Optata er ikke part i købsaftalen.** Platformen må ikke optræde som køber, sælger, juridisk rådgiver, klientmiddelforvalter eller betalingsmodtager af købesummen.
-3. **Advokatselskabet er selvstændig juridisk leverandør.** Det indgår eget klientforhold, foretager konfliktkontrol, fastlægger rådgivningsomfang, fører egen sag/journal, fakturerer selv og bærer sit professionelle ansvar.
-4. **Serviceleverandører er selvstændige leverandører.** Fotograf, rengøring, styling, byggesagkyndig, fremvisningsvært og øvrige leverandører har afgrænsede opgaver, egne vilkår og ansvar for egne leverancer.
+3. **Advokatselskabet er et selvstændigt juridisk selskab.** Det indgår eget klientforhold, foretager konfliktkontrol, fastlægger rådgivningsomfang, fører egen sag/journal, fakturerer selv og bærer sit professionelle ansvar.
+4. **Serviceselskabet er et andet, selvstændigt juridisk selskab.** Det indgår egne serviceaftaler, bestiller og/eller leverer ikke-juridiske ydelser inden for sit godkendte forretningsområde, fakturerer selv og bærer ansvaret for egne leverancer. Det er ikke samme juridiske enhed som advokatselskabet.
+5. **Øvrige serviceleverandører er selvstændige leverandører.** Fotograf, rengøring, styling, byggesagkyndig, fremvisningsvært og øvrige leverandører har afgrænsede opgaver, egne vilkår og ansvar for egne leverancer.
 5. **DIRECT er en komplet servicevej.** Kunden kan få hjælp til klargøring, boligmateriale, besigtigelse, fremvisning og praktisk koordinering uden at engagere en traditionel ejendomsmægler.
 6. **Platformindtægt er abonnementsbaseret og ikke betinget af gennemført handel.** Priser, niveauer og betalingsintervaller fastlægges senere.
 7. **Kunden vælger aktivt ydelser.** Et Optata-login er ikke et advokatengagement, en servicebestilling eller et samtykke til ubegrænset datadeling.
@@ -59,6 +60,8 @@ Målet er én enkel kundeoplevelse med flere tydeligt adskilte leverandører og 
 - Love, at en bolig er juridisk fri, finansieret, godkendt eller tilgængelig alene ud fra registerdata eller platformstatus.
 - Bruge kundens fortrolige sagsoplysninger til uvedkommende B2B-salg eller krydssalg.
 
+**Selskabsforudsætning:** Optata, advokatselskabet og serviceselskabet er tre selvstændige juridiske selskaber.
+
 **Vigtigt:** Listen beskriver produktets ønskede grænse, ikke en juridisk safe harbour. Den faktiske aktivitet, kontrol, markedsføring, indtægtsmodel, kundeløfter og arbejdsgange afgør den regulatoriske vurdering.
 
 ### 2.2 Advokatselskabet
@@ -84,11 +87,13 @@ Efter særskilt engagement kan advokatselskabet blandt andet:
 
 Advokatselskabet bestemmer selv, om det påtager sig en opgave, og må ikke være forpligtet til at anbefale Optata, en bestemt partner eller en bestemt handel.
 
-### 2.3 Serviceselskab og eksterne leverandører
+### 2.3 Serviceselskabet og eksterne leverandører
 
-**Serviceselskab og advokatselskab må ikke behandles som samme juridiske enhed i produktet, før selskabs- og professionsreglerne er afklaret.** Ikke-juridiske ydelser som styling, rengøring, fotografering, fremvisning og håndværk bør modelleres som selvstændige serviceordrer med identificeret leverandør. Om advokatselskabet selv må sælge, koordinere eller fakturere sådanne ydelser, kræver særskilt skriftlig vurdering.
+**Stifterbeslutning: Serviceselskabet og advokatselskabet er to forskellige, selvstændige juridiske selskaber.** Serviceselskabet er den kommercielle og operationelle enhed for ikke-juridiske ydelser som klargøring, rengøring, styling, fotografering, fremvisning og praktisk koordinering. Advokatselskabet leverer juridiske ydelser under sit eget klientforhold og professionelle ansvar. Serviceselskabet kan indgå egne aftaler med eksterne leverandører og kunder. Advokatselskabet må ikke automatisk anses for at være leverandør, underleverandør eller ansvarlig for serviceselskabets ydelser.
 
-Hver leverandør skal have:
+De to selskaber skal have separate aftaler, fakturering, regnskab, ledelsesbeslutninger, forsikringer, kundekommunikation og adgangsstyring. Eventuelle fælles ejere, ledelse, lokaler, IT-systemer, markedsføring, henvisninger eller betalinger skal beskrives og vurderes juridisk. Selskabsadskillelsen er en faktisk organisationsbeslutning, men ikke i sig selv dokumentation for, at alle aktiviteter er uden for regulering.
+
+Hver ekstern leverandør skal have:
 - Identificeret juridisk leverandør og kontaktvej.
 - Beskrivelse af opgave, omfang, leverance og acceptkriterier.
 - Pris, betalingsmodtager, afbestillings- og reklamationsvilkår.
@@ -483,7 +488,7 @@ Før et reelt handelsflow kan lanceres, skal uafhængig dansk rådgiver skriftli
 |---|---|---|---|
 | SRA-01 | Optatas rolle | Platform, ikke part i købsaftale, juridisk rådgiver eller købesumsmodtager | Stifterretning; juridisk review |
 | SRA-02 | Advokatselskab | Selvstændigt klientforhold, konfliktkontrol, engagement og fakturering | Stifterretning; professions-/selskabsretligt review |
-| SRA-03 | Serviceselskab | Behandles som separat juridisk enhed fra advokatselskab indtil andet er godkendt | Foreslået; stifterbeslutning |
+| SRA-03 | Serviceselskab | Eget selvstændigt juridisk selskab, adskilt fra advokatselskabet og Optata | **Fastlagt af stifter**; selskabs-/professionsretlig implementering skal kvalitetssikres |
 | SRA-04 | DIRECT | Fuld servicevej med frivillige bestillinger og tydeligt leverandøransvar | Produktretning |
 | SRA-05 | Fremvisning | Booking i Optata; fysisk adgang og sikkerhed hos sælger/udpeget udfører | Foreslået; operationel validering |
 | SRA-06 | FulfillmentCase | Koordinerer status og handoffs, ejer ikke juridiske dokumenter eller midler | Foreslået; domæne-/arkitekturreview |
@@ -497,7 +502,7 @@ Før et reelt handelsflow kan lanceres, skal uafhængig dansk rådgiver skriftli
 
 ## 17. Næste leverancer og rækkefølge
 
-1. **Stifterbeslutninger:** Afklar om advokatselskabet og serviceselskabet er to juridiske enheder, og godkend de produktmæssige grænser i SRA-01–SRA-13.
+1. **Stifterbeslutninger:** Selskabsadskillelsen mellem Optata, advokatselskabet og serviceselskabet er fastlagt. Godkend de resterende produktmæssige grænser i SRA-01–SRA-13.
 2. **Juridisk vurdering:** Giv uafhængig rådgiver den faktiske service blueprint, RACI, selskabsdiagram, betalingsflow og dataflow – ikke kun en abstrakt beskrivelse.
 3. **Skærm-for-skærm UX:** Omsæt køber, sælger, DIRECT, fremvisning og FulfillmentCase til skærme, fejltilstande, tomme tilstande og mobilflows.
 4. **Domænekontrakter:** Specificér PropertyPresentation, ServiceOrder, Viewing og FulfillmentCase med states, events, commands, ownership og idempotency.
