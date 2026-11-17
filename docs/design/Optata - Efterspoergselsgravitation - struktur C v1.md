@@ -64,7 +64,7 @@ CREATE UNIQUE INDEX one_active_mandate
   ON sale_mandate(address_id) WHERE status='ACTIVE';
 ```
 
-**Sameje:** alle ejere skal MitID-bekræfte mandatet. **Andelsbolig:** andelshaver + administrator-attest (EJF dur ikke).
+**Sameje:** alle nødvendige ejere er separate rækker i `mandate_party` og skal godkende samme vilkårsversion. **Andelsbolig:** andelshaver + relevant administrator-/foreningsdokumentation; EJF må ikke antages at dække andelsretten. Fuldmagt, dødsbo og tvister går i manuel review.
 
 **Det er aktivet.** Et eksklusivt mandat hos Optata kan en mægler ikke tage. Og sælgeren kan tilbagekalde det — det er deres kontrol, ikke vores lås.
 
@@ -174,7 +174,7 @@ Vi ejer mandat, budbog og proces. **Det er tæt på kerneformidling** — det sk
 | **L41** | Krav til **mandatvilkår**: eksklusivitet, løbetid, tilbagekaldelse, sameje, andel | SaleMandate |
 | **L42** | Mæglerens **deltagelsesvilkår**: scoped adgang, ingen eksport, tavshedspligt, sanktion | participation_license |
 
-**L38–L40 skal besvares før fase 3 bygges.** Men fase 1 (register/analyse) og fase 2 (verificeret ordrebog) kan bygges nu — de er uændrede.
+**L38–L42 skal besvares før SaleMandate, OfferLedger eller executor access aktiveres i produktion.** Men fase 1 (register/analyse) og fase 2 (verificeret ordrebog) kan bygges nu — de er uændrede.
 
 ---
 
@@ -186,7 +186,7 @@ Vi ejer mandat, budbog og proces. **Det er tæt på kerneformidling** — det sk
 | **2** | S3: MitID, ordre, bankattest, vault | **Origination** | Kun persondata |
 | **3** | **S4: SaleMandate** (inbound, ejer logger ind) | **Mandat** | L38, L41 |
 | **4** | **S5: OfferLedger** + begrænset beskedfelt | **Budproces + prisdannelse** | L38–L39 |
-| **5** | S6: Mæglerdeltagelse (scoped) + feeds | Mægleren kommer til os | L42 |
+| **5** | S6: Listings + Campaign + scoped deltagelse | Mægleren kommer til os | L42 |
 | **6** | S7: Fulfillment via partner (DIRECT) | **Gebyret + sagsmappen** | L1–L3, L21–L24 |
 | **7** | Demand Pro + egen mæglertilladelse (A) | Fuld kontrol | Godkendelse |
 
