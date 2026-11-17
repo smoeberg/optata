@@ -1,0 +1,15 @@
+# Red fields: changes here need review by a human owner (projektgrundlag §7.1).
+# Only one owner exists so far. Add a second reviewer before the UA team starts,
+# so the author of a change is never its only reviewer.
+
+/core/disclosure/        @smoeberg
+/core/identity/          @smoeberg
+/core/relay/             @smoeberg
+/core/consent/           @smoeberg
+/core/verification/      @smoeberg
+/core/insights/          @smoeberg
+/core/billing/           @smoeberg
+/migrations/             @smoeberg
+/contracts/              @smoeberg
+/tests/guards/           @smoeberg
+/.github/                @smoeberg

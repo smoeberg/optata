@@ -1,0 +1,154 @@
+openapi: 3.1.0
+info:
+  title: Optata Core API
+  version: 0.6.0
+  description: >
+    Contract first. This file is the single source of truth for the HTTP API.
+    Skeleton for S0: only zone A (public data) and the health check are defined.
+    Endpoints for orders, owners, analyses and Demand Pro are added in the
+    sprint that builds them, before any code.
+
+    Changed from the 0.5.0 draft in bilag 16 to follow projektgrundlag v5.1:
+    there is no e-mail session. Every non-anonymous call requires MitID.
+servers:
+  - url: https://api.optata.dk/v1
+
+security:
+  - {}
+
+tags:
+  - name: public
+  - name: ops
+
+components:
+  securitySchemes:
+    mitid:
+      type: openIdConnect
+      openIdConnectUrl: https://broker.optata.dk/.well-known/openid-configuration
+    mitidStepUp:
+      type: apiKey
+      in: header
+      name: X-Step-Up-Ref
+    orgAuth:
+      type: openIdConnect
+      openIdConnectUrl: https://broker.optata.dk/erhverv/.well-known/openid-configuration
+    staffAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      required: [code, message, trace_id]
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          enum:
+            - ORDER_ALREADY_ACTIVE
+            - OWNERSHIP_NOT_VERIFIED
+            - VERIFICATION_EXPIRED
+            - MISSING_CONSENT
+            - STEP_UP_REQUIRED
+            - REVEAL_BLOCKED
+            - PROFILE_NOT_APPROVED
+            - SUBSCRIPTION_EXPIRED
+            - MESSAGE_REDACTED
+            - K_ANONYMITY_BLOCKED
+            - RATE_LIMITED
+            - NO_SOURCE
+            - NO_DATE
+            - QUOTE_MISMATCH
+            - OPINION
+            - EAN_REQUIRED
+            - SCOPE_INCOMPLETE
+            - REVISION_NOT_ACCEPTED
+            - TOO_MANY_DIMENSIONS
+            - GEO_TOO_GRANULAR
+        message: { type: string }
+        trace_id: { type: string }
+
+    Health:
+      type: object
+      required: [status]
+      additionalProperties: false
+      properties:
+        status: { type: string, enum: [ok] }
+
+    AreaSummary:
+      type: object
+      required: [area_id, level, name, dwelling_count]
+      additionalProperties: false
+      properties:
+        area_id: { type: string }
+        level: { type: string, enum: [MUNICIPALITY, ZIP, NEIGHBOURHOOD, STREET] }
+        parent_id: { type: [string, "null"] }
+        name: { type: string }
+        dwelling_count: { type: integer }
+
+    QualityFlags:
+      type: object
+      description: Field name to flag. Open by design; values are never personal data.
+      additionalProperties: { type: string }
+
+    Property:
+      type: object
+      required: [address_id, bfe, zip_id, attrs]
+      additionalProperties: false
+      properties:
+        address_id: { type: string, format: uuid }
+        bfe: { type: string }
+        municipality_id: { type: string }
+        zip_id: { type: string }
+        neighbourhood_id: { type: [string, "null"] }
+        street_id: { type: [string, "null"] }
+        owner_kind: { type: string, enum: [PRIVATE, COMPANY, ANDELSFORENING] }
+        attrs:
+          type: object
+          description: BBR attributes. Open by design; zone A only.
+        quality_flags: { $ref: '#/components/schemas/QualityFlags' }
+        valid_from: { type: string, format: date }
+        recorded_at: { type: string, format: date-time }
+
+paths:
+  /health:
+    get:
+      tags: [ops]
+      responses:
+        "200":
+          description: Service is up
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+
+  /areas:
+    get:
+      tags: [public]
+      parameters:
+        - { name: q, in: query, schema: { type: string } }
+      responses:
+        "200":
+          description: Areas matching the query
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/AreaSummary' }
+
+  /properties/{address_id}:
+    get:
+      tags: [public]
+      parameters:
+        - { name: address_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: Zone A lookup for one address
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Property' }
+        "404":
+          description: Unknown address
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }

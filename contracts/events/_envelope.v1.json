@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://optata.dk/contracts/events/_envelope.v1.json",
+  "title": "EventEnvelope",
+  "type": "object",
+  "required": ["event_id", "type", "schema_version", "occurred_at", "recorded_at", "actor", "zone", "aggregate", "trace_id", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id":       { "type": "string" },
+    "type":           { "type": "string", "pattern": "^[a-z_]+\\.[a-z_]+$" },
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "occurred_at":    { "type": "string" },
+    "recorded_at":    { "type": "string" },
+    "actor": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind":      { "enum": ["USER", "STAFF", "SYSTEM", "PARTNER"] },
+        "pseudonym": { "type": ["string", "null"] },
+        "org_id":    { "type": ["string", "null"] }
+      }
+    },
+    "zone": { "enum": ["A", "B", "C"] },
+    "aggregate": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["ORDER", "DEAL", "PROPERTY", "IDENTITY", "PROFILE", "SUBSCRIPTION", "ANALYSIS"] },
+        "id":   { "type": "string" }
+      }
+    },
+    "trace_id":     { "type": "string" },
+    "causation_id": { "type": ["string", "null"] },
+    "payload":      { "type": "object" }
+  },
+  "allOf": [
+    {
+      "$comment": "No direct identifiers in payload. core/events/envelope.py also checks nested keys.",
+      "not": {
+        "properties": {
+          "payload": {
+            "anyOf": [
+              { "required": ["cpr"] }, { "required": ["name"] },
+              { "required": ["email"] }, { "required": ["phone"] },
+              { "required": ["document"] }, { "required": ["message_body"] }
+            ]
+          }
+        },
+        "required": ["payload"]
+      }
+    }
+  ]
+}
