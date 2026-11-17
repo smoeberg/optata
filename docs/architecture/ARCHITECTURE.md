@@ -197,6 +197,8 @@ Begge veje er målarkitektur. Ingen prod-release uden LG-1, LG-5 og relevante be
 
 ## 13. Tværgående kontrakter
 
+Den fælles rolle- og autoritetsmodel er beskrevet i [Role & Authority Model v1.0](../security/ROLE-AUTHORITY-MODEL-v1.0.md) og ADR-020. Den præciserer invarianterne 4–6, 12, 19 og 27–32. Dokumentet er Proposed og må ikke fortolkes som implementeret adgangskontrol.
+
 De konkrete, testbare krav til least privilege, identitets-/sessionsikkerhed, event-authoritative writes, saga-workflows, audit/outbox, Zone C-release, samtykke-tilbagekaldelse, projections og ingestion findes i:
 
 - [Architecture Contracts v1.0](ARCHITECTURE-CONTRACTS-v1.0.md)
