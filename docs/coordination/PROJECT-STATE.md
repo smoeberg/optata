@@ -2,7 +2,7 @@
 
 **Snapshot date:** 17 November 2026  
 **Snapshot branch:** `main`  
-**Snapshot commit:** `7a8f52ab5f01b652beceb9e40a611ec0f3f97f27`  
+**Snapshot commit:** `fa3ad5a9521fc520374b583f16b2f94a886031d2`  
 **Maintainer:** Product owner (human)
 
 > This is a coordination snapshot, not a replacement for the normative documents. Update it when a material project state changes. Always verify GitHub before acting; this file can become stale.
@@ -20,9 +20,12 @@
 
 - Default branch: `main`.
 - The repository is public and has Issues and PRs enabled.
-- At this snapshot, open draft PR [#17 — three-company operating model](https://github.com/smoeberg/optata/pull/17) targets `main`. It must be reviewed and explicitly decided by the product owner; it is not merged or normative yet.
-- Existing non-main branches at snapshot: `docs/product-closure-gap-analysis`, `docs/service-responsibility-architecture-v1`, `docs/three-company-model-alignment`. Check their current PR/Issue links and heads before using or deleting them.
-- This coordination foundation is being introduced on its own branch and must be merged through a human-reviewed PR.
+- PR [#17 — three-company operating model](https://github.com/smoeberg/optata/pull/17) was merged to `main` at `2450dee82aeb10c5f4b4a1333e1c79deb2b851d2`. The three-company legal separation is a founder-established premise; the PR explicitly leaves ownership/management, data-controller roles, referrals, marketing, shared IT and payment arrangements unresolved.
+- PR [#18 — three-agent coordination foundation](https://github.com/smoeberg/optata/pull/18) was merged to `main` at `07eaae4a660abe95090fe915a72296e6703aa744`.
+- PR [#19 — documentation index formatting correction](https://github.com/smoeberg/optata/pull/19) was merged to `main` at `fa3ad5a9521fc520374b583f16b2f94a886031d2`.
+- At this snapshot, GitHub reports no open pull requests.
+- Previously noted branches `docs/product-closure-gap-analysis`, `docs/service-responsibility-architecture-v1` and `docs/three-company-model-alignment` should be checked against current issues/PRs and branch heads before reuse or deletion.
+- The coordination foundation is now on `main` under `docs/coordination/`. All agents must read `docs/coordination/README.md` and follow `AGENT-PROTOCOL.md` before starting work.
 
 ## Product / engineering readiness
 
@@ -51,3 +54,4 @@ A green CI run only proves the checks that actually ran. It does not close missi
 | Date | Change |
 |---|---|
 | 2026-11-17 | Initial coordination snapshot based on main commit `7a8f52a`; PR #17 recorded as open draft. |
+| 2026-11-17 | Updated after merges of PRs #17, #18 and #19. Coordination foundation is now on `main`; no open PRs were reported at verification. |
