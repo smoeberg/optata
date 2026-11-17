@@ -10,6 +10,9 @@
 - `adr/ADR-019-relocation-case.md` — foreslået koordineret flytteforløb med separate salg- og købsspor.
 - `backlog/S0-S1.md`, `S3.md`, `S4.md`, `S5.md`, `S6.md` — implementeringsplan.
 
+## Produktlukning og udviklingsparathed
+- `product/PRODUCT-CLOSURE-AND-DEVELOPMENT-READINESS-v1.0.md` — samlet audit af handelsrejsen, AI-agentinput, mangler, 20 %-mål og beslutninger før konceptlås. Status: audit/anbefaling, ikke godkendt baseline.
+
 ## Supplerende specifikationer
 - `design/` — UI, produktdesign, listings, Campaign og markedsambition.
 - `compliance/` — åbne juristspørgsmål og aftaleudkast.
