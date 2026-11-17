@@ -38,5 +38,7 @@ has not passed.
 | One active order per household and scope | 9 | `test_order_one_per_household.py` |
 | Fixtures contain no real personal data | ADR-012 | `test_no_prod_like_data.py` |
 
-Each of these was checked once by breaking the rule on purpose and confirming
-the guard failed.
+The vault, append-only and row level security guards were checked once by
+breaking the rule on purpose in the migration and confirming the guard failed.
+The household index and the anonymous-access guard have not been checked that
+way. The data guard carries its own self-test of the detectors.
