@@ -25,11 +25,11 @@ import uuid
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
+from core.registry.dwellings import BOLIGKODER
+
 _NAMESPACE = uuid.UUID("0f7a7a2e-5d0c-4c1b-9a53-6f7074617461")
 _EPOCH = datetime(2026, 1, 1, tzinfo=UTC)
 
-# BBR-like usage codes. Only these count as dwellings in the density denominator.
-BOLIGKODER = frozenset({"120", "130", "140"})
 _NON_RESIDENTIAL = "320"
 
 MUNICIPALITY_ID = "SYN-MUN-01"
@@ -40,7 +40,7 @@ FX01_UNITS = 40
 FX02_UNITS = 12
 _NEIGHBOURHOODS = 4
 
-_ACTIVE_BASE = {"VILLA": "120", "RAEKKEHUS": "130", "LEJLIGHED": "140"}
+_BUYER_TYPES = {"VILLA": "120", "RAEKKEHUS": "130", "LEJLIGHED": "140"}
 
 
 def cvr_is_valid(cvr: str) -> bool:
@@ -232,7 +232,7 @@ def generate(seed: int = 42, dwellings: int = 10_000, orders: int = 1_000,
             scope, address_id = "AREA", None
             area_id = ZIP_ID if rng.random() < 0.5 else rng.choice(neighbourhood_ids)
         criteria = {
-            "type": rng.choice(sorted(_ACTIVE_BASE)),
+            "type": rng.choice(sorted(_BUYER_TYPES)),
             "areal_min": rng.choice([60, 80, 100, 120, 140]),
             "rooms_min": rng.randrange(2, 6),
             "budget_max": rng.randrange(20, 80) * 100_000,

@@ -18,7 +18,7 @@ Run everything locally with `make ci`. The same steps run in
 | 8 | Dependency and licence scan | Not built | |
 | 9 | Migration test | Partial | Migrations run from scratch in every test session. No check for destructive changes |
 | 10 | Synthetic data check | Built, draft | `tests/guards/test_no_prod_like_data.py` |
-| 11 | Human review | Needs GitHub setting | `CODEOWNERS` exists. Branch protection on `main` must be switched on |
+| 11 | Human review | Not enforceable yet | `CODEOWNERS` exists. Branch protection on a private repository needs GitHub Pro or Team; until then a red run does not block a merge |
 | 12 | End-to-end case flows | Not built | No flows exist yet |
 
 ## Database tests in CI
@@ -37,8 +37,15 @@ has not passed.
 | A buyer sees only their own orders | ADR-004 | `test_zone_separation.py` |
 | One active order per household and scope | 9 | `test_order_one_per_household.py` |
 | Fixtures contain no real personal data | ADR-012 | `test_no_prod_like_data.py` |
+| Register history is never overwritten | 2 | `test_property_history.py` |
+| Property events are append-only | 3 | `test_property_history.py` |
+| Raw density is not readable by application roles | 8 | `tests/unit/test_density.py` |
 
-The vault, append-only and row level security guards were checked once by
-breaking the rule on purpose in the migration and confirming the guard failed.
-The household index and the anonymous-access guard have not been checked that
-way. The data guard carries its own self-test of the detectors.
+These were checked by breaking the rule on purpose in the migration and
+confirming the tests failed: vault access, append-only order events, row level
+security, the history trigger on `zone_a.property`, the one-open-version index,
+distinct counting of households, address orders leaking to street level, and
+read access to raw density.
+
+Not checked that way: the household index on orders and the anonymous-access
+guard. The data guard carries its own self-test of the detectors.
